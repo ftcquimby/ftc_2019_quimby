@@ -103,12 +103,6 @@ public class OmegaBot {
         drivetrain.setRunMode(originalMode);
     }
 
-        drivetrain.setVelocity(0);
-
-        drivetrain.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        drivetrain.setRunMode(originalMode);
-    }
     /**
      * This method makes the robot turn counterclockwise based on gyro values and PID
      * Velocity is always positive. Set neg degrees for clockwise turn
