@@ -88,31 +88,6 @@ public class OmegaBot {
         drivePID = new OmegaPID(0.45, 0.0001, 0.395, driveTolerance);//.25, .0001, .08 has some jitters
     }//.25,.00008,.5
 
-
-    public void move(double inches, double velocity) {
-        double target = ticksPerInch * inches;
-        DcMotor.RunMode originalMode = frontLeft.getMode(); //Assume that all wheels have the same runmode
-        drivetrain.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        drivetrain.setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        while (Math.abs(drivetrain.getAvgEncoderValueOfBackWheels() - target) > 50) {
-            drivetrain.setVelocity(velocity * inches / (Math.abs(inches)));
-        }
-        drivetrain.setVelocity(0);
-        drivetrain.setRunMode(originalMode);
-    }
-
-    public void moveTime(double velocity, double time) {
-        DcMotor.RunMode originalMode = frontLeft.getMode(); //Assume that all wheels have the same runmode
-        drivetrain.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        drivetrain.setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        ElapsedTime runtime = new ElapsedTime();
-        while (runtime.seconds() < time) {
-            drivetrain.setVelocity(velocity);
-        }
-        drivetrain.setVelocity(0);
-        drivetrain.setRunMode(originalMode);
-    }
-
     public void movePID(double inches, double velocity) {
         double target = ticksPerInch * inches + drivetrain.getAvgEncoderValueOfFrontWheels();
         DcMotor.RunMode originalMode = frontLeft.getMode(); //Assume that all wheels have the same runmode
@@ -128,96 +103,12 @@ public class OmegaBot {
         drivetrain.setRunMode(originalMode);
     }
 
-    //This method makes the robot turn counterclockwise
-    public void turn(double degrees, double velocity) {
-        degrees = -degrees;                             //quickfix to make Nidhir's method turn robot counterclockwise with positive arg passed to degrees
-        DcMotor.RunMode originalMode = frontLeft.getMode(); //Assume that all wheels have the same runmode
-
-        //Resets encoder values
-        drivetrain.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        //Sets target position; left motor moves forward while right motor moves backward
-        frontLeft.setTargetPosition((int) (ticksPerDegree * degrees));
-        backLeft.setTargetPosition((int) (ticksPerDegree * degrees));
-        frontRight.setTargetPosition(-1 * (int) (ticksPerDegree * degrees));
-        backRight.setTargetPosition(-1 * (int) (ticksPerDegree * degrees));
-
-        //Run to position
-        drivetrain.setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        drivetrain.setVelocity(velocity);
-
-        //While the motors are still running, no other code will run
-        while (drivetrain.isPositioning()) {
-            telemetry.update();
-        }
-
         drivetrain.setVelocity(0);
 
         drivetrain.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         drivetrain.setRunMode(originalMode);
     }
-
-    /*
-     * This method makes the robot turn counterclockwise based on gyro values
-     * Velocity is always positive. Set neg degrees for clockwise turn
-     */
-    public void turnUsingGyro(double degrees, double velocity) {
-        DcMotor.RunMode originalMode = frontLeft.getMode(); //Assume that all wheels have the same runmode
-        drivetrain.setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        double targetHeading = getAngle() + degrees;
-        if (degrees > 0) {
-            while (targetHeading - getAngle() > turnTolerance) {
-                frontLeft.setPower(-velocity);
-                backLeft.setPower(-velocity);
-                frontRight.setPower(velocity);
-                backRight.setPower(velocity);
-            }
-        } else {
-            while (getAngle() - targetHeading > turnTolerance) {
-                frontLeft.setPower(velocity);
-                backLeft.setPower(velocity);
-                frontRight.setPower(-velocity);
-                backRight.setPower(-velocity);
-            }
-        }
-        drivetrain.setVelocity(0);
-        drivetrain.setRunMode(originalMode);
-    }
-
-
-    /**
-     * DO NOT USE THIS METHOD IN COMPETITION. USE THE ONE IN AUTOBASE ROVER RUCKUS ISNTEAD. THIS AND OmegaBot's MOVEPID ARE JUST FOR TESTING PURPOSES.
-     * This method makes the robot turn counterclockwise based on gyro values and PID
-     * Velocity is always positive. Set neg degrees for clockwise turn
-     *
-     * @param degrees  desired angle in deg
-     * @param velocity max velocity
-     */
-    public void turnUsingPID(double degrees, double velocity) {
-        DcMotor.RunMode original = frontLeft.getMode(); //assume all drive motors r the same runmode
-        drivetrain.setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        double max = velocity;
-        double targetHeading = getAngle() + degrees;
-        int count = 0;
-        ElapsedTime runtime = new ElapsedTime();
-        while (runtime.seconds() < turnTimeLimit) {
-            velocity = turnPID.calculatePower(getAngle(), targetHeading, -max, max);
-            telemetry.addData("Count", count);
-            telemetry.addData("Calculated power", turnPID.getDiagnosticCalculatedPower());
-            telemetry.addData("PID power", velocity);
-            telemetry.update();
-            frontLeft.setPower(-velocity);
-            backLeft.setPower(-velocity);
-            frontRight.setPower(velocity);
-            backRight.setPower(velocity);
-            count++;
-        }
-        drivetrain.setVelocity(0);
-        drivetrain.setRunMode(original);
-    }
-
     /**
      * This method makes the robot turn counterclockwise based on gyro values and PID
      * Velocity is always positive. Set neg degrees for clockwise turn
@@ -326,9 +217,6 @@ public class OmegaBot {
         return MOVE_CORRECTION_ADDENDUM;
     }
 
-    public double getAUTO_GOLD_RADIUS() {
-        return AUTO_GOLD_RADIUS;
-    }
 
     public double getTicksPerInch() {
         return ticksPerInch;
