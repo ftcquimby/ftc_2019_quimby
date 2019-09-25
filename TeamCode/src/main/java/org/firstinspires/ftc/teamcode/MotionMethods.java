@@ -57,6 +57,50 @@ public class MotionMethods {
     }
 
     public void strafe(double heading, double distance, double velocity){
+        double moveGain = .02;
+        double turnGain = .01;
+        double right = Math.cos(heading);
+        double forward = Math.sin(heading);
+        double robotHeading = robot.getAngle();
+        int[] encoderCounts = {robot.frontLeft.getCurrentPosition(),robot.frontRight.getCurrentPosition(),robot.backLeft.getCurrentPosition(),robot.backRight.getCurrentPosition()};
+        ElapsedTime runtime = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+        double currTime = runtime.milliseconds();
+        while (opMode.opModeIsActive() && distance > 0){
+            double timeChange = runtime.milliseconds() - currTime;
+            currTime = runtime.milliseconds();
+            distance--;//find a better way to do this w encoder counts
+            double clockwise = robotHeading - robot.getAngle();
+            clockwise *= turnGain;
+            double temp = forward * Math.cos(robot.getAngle()) + right * Math.sin(robot.getAngle());
+            right = -1 * forward * Math.sin(robot.getAngle()) + right * Math.sin(robot.getAngle());
+            forward = temp * moveGain * distance;
+            right = right * moveGain * distance;
 
+            double front_left = forward + clockwise + right;
+            double front_right = forward - clockwise -right;
+            double rear_left = forward + clockwise - right;
+            double rear_right = forward - clockwise + right;
+
+            double max = Math.abs(front_left);
+            if(Math.abs(front_right) > max) max = Math.abs(front_right);
+            if(Math.abs(rear_left) > max) max = Math.abs(rear_left);
+            if(Math.abs(rear_right) > max) max = Math.abs(rear_right);
+
+            if(max>velocity){
+                front_left /= max;
+                front_left *= velocity;
+                front_right /= max;
+                front_right *= velocity;
+                rear_left /= max;
+                rear_left *= velocity;
+                rear_right /= max;
+                rear_right *= velocity;
+            }
+
+            robot.frontLeft.setPower(front_left);
+            robot.frontRight.setPower(front_right);
+            robot.backLeft.setPower(rear_left);
+            robot.backRight.setPower(rear_right);
+        }
     }
 }
