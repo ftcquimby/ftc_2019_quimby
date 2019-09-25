@@ -56,7 +56,7 @@ public class MotionMethods {
         robot.drivetrain.setRunMode(original);
     }
 
-    public void strafe(double heading, double distance, double velocity){
-
+    public void strafe(double direction, double distance, double velocity){
+    
     }
 }
