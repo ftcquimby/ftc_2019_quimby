@@ -19,10 +19,11 @@ public class MotionProfileGenerator {
     }
 
     public double[] generateProfile(double distance){
-        double maxVelTime = ((distance - distThreshold)/maxVel);
-        int runTime = (int) (maxVelTime + 2 * accTime);
-        double[] motionProfile = new double[runTime];
+        double[] motionProfile = new double[1];
         if(distance > distThreshold){
+            double maxVelTime = ((distance - distThreshold)/maxVel);
+            int runTime = (int) (maxVelTime + 2 * accTime);
+            motionProfile = new double[runTime];
             for(int ms = 0; ms < runTime; ms++){
                 if(ms < accTime){
                     motionProfile[ms] = maxAcc * ms;
