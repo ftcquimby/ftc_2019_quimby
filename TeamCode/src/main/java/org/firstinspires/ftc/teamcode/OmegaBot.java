@@ -28,8 +28,8 @@ public class OmegaBot {
     public DcMotor backRight;
     public DcMotor pivot;
     public DcMotor extension;
-    public DcMotor left_intake;
-    public DcMotor right_intake;
+    public DcMotor leftIntake;
+    public DcMotor rightIntake;
 
     DcMotor.RunMode myRunMode = DcMotor.RunMode.RUN_TO_POSITION;
     public OmegaDriveTrain drivetrain;
@@ -61,7 +61,7 @@ public class OmegaBot {
         pivot = hardwareMap.get(DcMotor.class, "pivot");
         extension = hardwareMap.get(DcMotor.class, "extension");
         leftIntake = hardwareMap.get(DcMotor.class, "left_intake");
-        rightIntake = hardwareMap.get(DcMotor.class, "right_intake")
+        rightIntake = hardwareMap.get(DcMotor.class, "right_intake");
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
         // and named "imu1".

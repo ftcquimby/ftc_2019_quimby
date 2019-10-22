@@ -11,7 +11,7 @@ public class Teleop extends OpMode {
 
     public void loop(){
         double forward = gamepad1.left_stick_y;
-        double right = gamepad1.left_stick_x
+        double right = gamepad1.left_stick_x;
         double clockwise = gamepad1.right_stick_x;
         double temp = forward * Math.cos(robot.getAngle()) + right * Math.sin(robot.getAngle());
         right = -1 * forward * Math.sin(robot.getAngle()) + right * Math.sin(robot.getAngle());
