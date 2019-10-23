@@ -31,7 +31,7 @@ public class OmegaBot {
     public DcMotor leftIntake;
     public DcMotor rightIntake;
 
-    DcMotor.RunMode myRunMode = DcMotor.RunMode.RUN_TO_POSITION;
+    DcMotor.RunMode myRunMode = DcMotor.RunMode.RUN_USING_ENCODER;
     public OmegaDriveTrain drivetrain;
 
     //3.77953-inch diameter wheels, 1 wheel rotations per 1 motor rotation; all Yellow Jacket 19.2:1 motors for wheels (538 ticks per rev for 1:1); 27 inch turning diameter
@@ -74,6 +74,11 @@ public class OmegaBot {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
 
         imu.initialize(parameters);
+
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
