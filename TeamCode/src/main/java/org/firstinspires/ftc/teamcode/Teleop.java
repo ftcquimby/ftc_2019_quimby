@@ -16,19 +16,19 @@ public class Teleop extends OpMode {
         double forward = .25 * gamepad1.left_stick_y;
         double right = .25 * gamepad1.left_stick_x;
         double clockwise = -.25 * gamepad1.right_stick_x;
-        //double temp = forward * Math.cos(robot.getAngle()) + right * Math.sin(robot.getAngle());
-        //right = -1 * forward * Math.sin(robot.getAngle()) + right * Math.sin(robot.getAngle());
-        //forward = temp;
+        double temp = forward * Math.cos(Math.toRadians(robot.getAngle())) + right * Math.sin(MathtoRadians(robot.getAngle()));
+        right = -1 * forward * Math.sin(Math.toRadians(robot.getAngle())) + right * Math.sin(MathtoRadians(robot.getAngle()));
+        forward = temp;
 
-        double front_left = forward + clockwise - right;
-        double front_right = forward - clockwise + right;
-        double rear_left = forward + clockwise + right;
-        double rear_right = forward - clockwise - right;
+        double front_left = forward + clockwise + right;
+        double front_right = forward - clockwise - right;
+        double rear_left = forward + clockwise - right;
+        double rear_right = forward - clockwise + right;
 
-        double FrontLeftVal = gamepad1.left_stick_y - (gamepad1.left_stick_x) + -gamepad1.right_stick_x;
-        double FrontRightVal = gamepad1.left_stick_y + (gamepad1.left_stick_x) - -gamepad1.right_stick_x;
-        double BackLeftVal = gamepad1.left_stick_y + (gamepad1.left_stick_x) + -gamepad1.right_stick_x;
-        double BackRightVal = gamepad1.left_stick_y - (gamepad1.left_stick_x) - -gamepad1.right_stick_x;
+        //double FrontLeftVal = gamepad1.left_stick_y - (gamepad1.left_stick_x) + -gamepad1.right_stick_x;
+        //double FrontRightVal = gamepad1.left_stick_y + (gamepad1.left_stick_x) - -gamepad1.right_stick_x;
+        //double BackLeftVal = gamepad1.left_stick_y + (gamepad1.left_stick_x) + -gamepad1.right_stick_x;
+        //double BackRightVal = gamepad1.left_stick_y - (gamepad1.left_stick_x) - -gamepad1.right_stick_x;
 
         double max = Math.abs(front_left);
         if (Math.abs(front_right) > max) max = Math.abs(front_right);
