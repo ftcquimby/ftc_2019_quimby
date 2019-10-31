@@ -13,11 +13,11 @@ public class Teleop extends OpMode {
     }
 
     public void loop() {
-        double forward = .25 * gamepad1.left_stick_y;
-        double right = .25 * gamepad1.left_stick_x;
-        double clockwise = -.25 * gamepad1.right_stick_x;
-        double temp = forward * Math.cos(Math.toRadians(robot.getAngle())) + right * Math.sin(MathtoRadians(robot.getAngle()));
-        right = -1 * forward * Math.sin(Math.toRadians(robot.getAngle())) + right * Math.sin(MathtoRadians(robot.getAngle()));
+        double forward = gamepad1.left_stick_y;
+        double right = -gamepad1.left_stick_x;
+        double clockwise = gamepad1.right_stick_x;
+        double temp = forward * Math.cos(Math.toRadians(robot.getAngle())) - right * Math.sin(Math.toRadians(robot.getAngle()));
+        right = forward * Math.sin(Math.toRadians(robot.getAngle())) + right * Math.cos(Math.toRadians(robot.getAngle()));
         forward = temp;
 
         double front_left = forward + clockwise + right;
@@ -35,11 +35,11 @@ public class Teleop extends OpMode {
         if (Math.abs(rear_left) > max) max = Math.abs(rear_left);
         if (Math.abs(rear_right) > max) max = Math.abs(rear_right);
 
-        if (max > 1) {
-            front_left /= max;
-            front_right /= max;
-            rear_left /= max;
-            rear_right /= max;
+        if (max > .25) {
+            front_left /= (max * 4);
+            front_right /= (max * 4);
+            rear_left /= (max * 4);
+            rear_right /= (max * 4);
         }
 
         robot.frontLeft.setPower(front_left);
