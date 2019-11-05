@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 public class Teleop extends OpMode {
     OmegaBot robot;
+    double maxSpeed = .25;
 
     public void init() {
         robot = new OmegaBot(telemetry, hardwareMap);
@@ -35,11 +36,11 @@ public class Teleop extends OpMode {
         if (Math.abs(rear_left) > max) max = Math.abs(rear_left);
         if (Math.abs(rear_right) > max) max = Math.abs(rear_right);
 
-        if (max > .25) {
-            front_left /= (max * 4);
-            front_right /= (max * 4);
-            rear_left /= (max * 4);
-            rear_right /= (max * 4);
+        if (max > maxSpeed) {
+            front_left /= (max/maxSpeed);
+            front_right /= (max/maxSpeed);
+            rear_left /= (max/maxSpeed);
+            rear_right /= (max/maxSpeed);
         }
 
         robot.frontLeft.setPower(front_left);

@@ -59,8 +59,8 @@ public class MotionMethods {
     public void strafe(double heading, double distance, double velocity){
         double moveGain = .02;
         double turnGain = .01;
-        double right = Math.cos(heading);
-        double forward = Math.sin(heading);
+        double right = Math.cos(Math.toRadians(heading));
+        double forward = Math.sin(Math.toRadians(heading));
         double robotHeading = robot.getAngle();
         int[] encoderCounts = {robot.frontLeft.getCurrentPosition(),robot.frontRight.getCurrentPosition(),robot.backLeft.getCurrentPosition(),robot.backRight.getCurrentPosition()};
         ElapsedTime runtime = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
@@ -69,10 +69,10 @@ public class MotionMethods {
             double timeChange = runtime.milliseconds() - currTime;
             currTime = runtime.milliseconds();
             distance--;//find a better way to do this w encoder counts
-            double clockwise = robotHeading - robot.getAngle();
+            double clockwise =  robot.getAngle() - robotHeading;
             clockwise *= turnGain;
-            double temp = forward * Math.cos(robot.getAngle()) + right * Math.sin(robot.getAngle());
-            right = -1 * forward * Math.sin(robot.getAngle()) + right * Math.sin(robot.getAngle());
+            double temp = forward * Math.cos(Math.toRadians(robot.getAngle())) - right * Math.sin(Math.toRadians(robot.getAngle()));
+            right = forward * Math.sin(Math.toRadians(robot.getAngle())) + right * Math.cos(Math.toRadians(robot.getAngle()));
             forward = temp * moveGain * distance;
             right = right * moveGain * distance;
 
