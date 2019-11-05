@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class Teleop extends OpMode {
     OmegaBot robot;
 
-    public void init(){
+    public void init() {
         robot = new OmegaBot(telemetry, hardwareMap);
     }
 
@@ -49,16 +49,27 @@ public class Teleop extends OpMode {
 
         telemetry.addData("angle: ", robot.getAngle());
 
-        robot.leftIntake.setPower(-1);
-        robot.rightIntake.setPower(1);
-
         if (gamepad2.a) {
             robot.pivot.setPower(0.5);
+            robot.leftIntake.setPower(-1);
+            robot.rightIntake.setPower(1);
         } else if (gamepad2.y) {
             robot.pivot.setPower(-.5);
+
         } else {
             robot.pivot.setPower(0);
         }
+
+         if (gamepad2.right_bumper) {
+        robot.leftIntake.setPower(-1);
+        robot.rightIntake.setPower(1);
+    } else if (gamepad2.left_bumper) {
+        robot.leftIntake.setPower(1);
+        robot.rightIntake.setPower(-1);
+         } else {
+             robot.leftIntake.setPower(0);
+             robot.rightIntake.setPower(0);
+         }
 
         if(gamepad2.b) {
             robot.extension.setPower(0.5);
