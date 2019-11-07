@@ -56,6 +56,29 @@ public class MotionMethods {
         robot.drivetrain.setRunMode(original);
     }
 
+    public void turnUsingPIDVoltageFieldCentric(double degrees, double velocity) {
+        DcMotor.RunMode original = robot.frontLeft.getMode(); //assume all drive motors r the same runmode
+        robot.drivetrain.setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        double max = 12.0 * velocity;
+        double targetHeading = degrees;
+        int count = 0;
+        ElapsedTime runtime = new ElapsedTime();
+        while (opMode.opModeIsActive() && runtime.seconds() < robot.turnTimeLimit) {
+            velocity = (robot.turnPID.calculatePower(robot.getAngle(), targetHeading, -max, max) / 12.0); //turnPID.calculatePower() used here will return a voltage
+            telemetry.addData("Count", count);
+            telemetry.addData("Calculated velocity [-1.0, 1/0]", robot.turnPID.getDiagnosticCalculatedPower() / 12.0);
+            telemetry.addData("PID power [-1.0, 1.0]", velocity);
+            telemetry.update();
+            robot.frontLeft.setPower(-velocity);
+            robot.backLeft.setPower(-velocity);
+            robot.frontRight.setPower(velocity);
+            robot.backRight.setPower(velocity);
+            count++;
+        }
+        robot.drivetrain.setVelocity(0);
+        robot.drivetrain.setRunMode(original);
+    }
+
     public void strafe(double heading, double distance, double velocity){
         double moveGain = .02;
         double turnGain = .01;
@@ -71,6 +94,7 @@ public class MotionMethods {
             distance--;//find a better way to do this w encoder counts
             double clockwise =  robot.getAngle() - robotHeading;
             clockwise *= turnGain;
+            clockwise = 0;
             double temp = forward * Math.cos(Math.toRadians(robot.getAngle())) - right * Math.sin(Math.toRadians(robot.getAngle()));
             right = forward * Math.sin(Math.toRadians(robot.getAngle())) + right * Math.cos(Math.toRadians(robot.getAngle()));
             forward = temp * moveGain * distance;

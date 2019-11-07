@@ -22,10 +22,29 @@ public class AutoBase extends LinearOpMode{
         robot.drivetrain.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.drivetrain.setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        motionMethods.strafe(0, 47, .5);
-        motionMethods.strafe(180, 47, .5);
-        motionMethods.strafe(45, 47, .5);
-        motionMethods.strafe(225, 47, .5);
+        robot.leftIntake.setPower(-1);
+        robot.rightIntake.setPower(1);
+        sleep(1000);
+        robot.drivetrain.reverseDirection();
+        motionMethods.movePID(32,.5);
+        sleep(1000);
+        robot.drivetrain.reverseDirection();
+        motionMethods.turnUsingPIDVoltageFieldCentric(0,.5);
+        motionMethods.movePID(18,.5);
+        sleep(1000);
+        motionMethods.turnUsingPIDVoltageFieldCentric(-90, .5);
+        sleep(500);
+        robot.drivetrain.reverseDirection();
+        motionMethods.movePID(48,.5);
+        robot.drivetrain.reverseDirection();
+        motionMethods.turnUsingPIDVoltageFieldCentric(-90,.5);
+        robot.leftIntake.setPower(1);
+        robot.rightIntake.setPower(-1);
+        sleep(1000);
+        motionMethods.strafe(0,47,.5);
+        sleep(1000);
+        motionMethods.strafe(180,97,.5);
+
 
 
         //GYRO SETUP
