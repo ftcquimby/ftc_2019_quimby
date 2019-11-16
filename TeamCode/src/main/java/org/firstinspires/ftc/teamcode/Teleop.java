@@ -54,10 +54,20 @@ public class Teleop extends OpMode {
 
         if (gamepad2.a) {
             robot.pivot.setPower(0.5);
+            robot.leftIntake.setPower(-1);
+            robot.rightIntake.setPower(1);
         } else if (gamepad2.y) {
             robot.pivot.setPower(-.5);
+        } else if (gamepad2.right_bumper) {
+            robot.leftIntake.setPower(-1);
+            robot.rightIntake.setPower(1);
+        } else if (gamepad2.left_bumper) {
+            robot.leftIntake.setPower(1);
+            robot.rightIntake.setPower(-1);
         } else {
             robot.pivot.setPower(0);
+            robot.leftIntake.setPower(0);
+            robot.rightIntake.setPower(0);
         }
 
         if(gamepad2.b) {
