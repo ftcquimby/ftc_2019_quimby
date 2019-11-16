@@ -58,10 +58,10 @@ public class OmegaBot {
         frontRight = hardwareMap.get(DcMotor.class, "front_right");
         backLeft = hardwareMap.get(DcMotor.class, "back_left");
         backRight = hardwareMap.get(DcMotor.class, "back_right");
-        pivot = hardwareMap.get(DcMotor.class, "pivot");
-        extension = hardwareMap.get(DcMotor.class, "extension");
-        leftIntake = hardwareMap.get(DcMotor.class, "left_intake");
-        rightIntake = hardwareMap.get(DcMotor.class, "right_intake");
+        //pivot = hardwareMap.get(DcMotor.class, "pivot");
+        //extension = hardwareMap.get(DcMotor.class, "extension");
+        //leftIntake = hardwareMap.get(DcMotor.class, "left_intake");
+        //rightIntake = hardwareMap.get(DcMotor.class, "right_intake");
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
         // and named "imu1".
@@ -79,8 +79,8 @@ public class OmegaBot {
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        pivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //pivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

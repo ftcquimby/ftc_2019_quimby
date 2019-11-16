@@ -22,10 +22,36 @@ public class AutoBase extends LinearOpMode{
         robot.drivetrain.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.drivetrain.setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        robot.leftIntake.setPower(-1);
-        robot.rightIntake.setPower(1);
-        sleep(1000);
-        robot.drivetrain.reverseDirection();
+        robot.frontRight.setPower(1);
+        sleep(3000);
+        robot.frontRight.setPower(0);
+        robot.frontLeft.setPower(1);
+        sleep(3000);
+        robot.frontLeft.setPower(0);
+        robot.backLeft.setPower(1);
+        sleep(3000);
+        robot.backLeft.setPower(0);
+        robot.backRight.setPower(1);
+        sleep(3000);
+        robot.backRight.setPower(0);
+        robot.frontRight.setPower(-1);
+        sleep(3000);
+        robot.frontRight.setPower(0);
+        robot.frontLeft.setPower(-1);
+        sleep(3000);
+        robot.frontLeft.setPower(0);
+        robot.backLeft.setPower(-1);
+        sleep(3000);
+        robot.backLeft.setPower(0);
+        robot.backRight.setPower(-1);
+        sleep(3000);
+        robot.backRight.setPower(0);
+
+
+/*
+        //robot.leftIntake.setPower(-1);
+        //robot.rightIntake.setPower(1);
+        //robot.drivetrain.reverseDirection();
         motionMethods.movePID(32,.5);
         sleep(1000);
         robot.drivetrain.reverseDirection();
@@ -38,12 +64,13 @@ public class AutoBase extends LinearOpMode{
         motionMethods.movePID(48,.5);
         robot.drivetrain.reverseDirection();
         motionMethods.turnUsingPIDVoltageFieldCentric(-90,.5);
-        robot.leftIntake.setPower(1);
-        robot.rightIntake.setPower(-1);
+        //robot.leftIntake.setPower(1);
+        //robot.rightIntake.setPower(-1);
         sleep(1000);
         motionMethods.strafe(0,47,.5);
         sleep(1000);
         motionMethods.strafe(180,97,.5);
+*/
 
 
 

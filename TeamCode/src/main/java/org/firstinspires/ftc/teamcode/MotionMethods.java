@@ -84,6 +84,7 @@ public class MotionMethods {
         double turnGain = .01;
         double right = Math.cos(Math.toRadians(heading));
         double forward = Math.sin(Math.toRadians(heading));
+        telemetry.addData("heading", heading);
         double robotHeading = robot.getAngle();
         int[] encoderCounts = {robot.frontLeft.getCurrentPosition(),robot.frontRight.getCurrentPosition(),robot.backLeft.getCurrentPosition(),robot.backRight.getCurrentPosition()};
         ElapsedTime runtime = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
