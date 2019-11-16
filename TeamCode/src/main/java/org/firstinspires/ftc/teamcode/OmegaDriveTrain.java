@@ -1,18 +1,24 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class OmegaDriveTrain {
     DcMotor frontLeft;
     DcMotor frontRight;
     DcMotor backLeft;
     DcMotor backRight;
+    DcMotor[] motors = new DcMotor[4];
 
     public OmegaDriveTrain(DcMotor frontLeft, DcMotor frontRight, DcMotor backLeft, DcMotor backRight) {
         this.frontLeft = frontLeft;
         this.frontRight = frontRight;
         this.backLeft = backLeft;
         this.backRight = backRight;
+        this.motors[0] = frontLeft;
+        this.motors[1] = frontRight;
+        this.motors[2] = backLeft;
+        this.motors[3] = backRight;
     }
 
     /**
@@ -54,6 +60,17 @@ public class OmegaDriveTrain {
         frontRight.setMode(runMode);
         backLeft.setMode(runMode);
         backRight.setMode(runMode);
+    }
+
+    public void reverseDirection(){
+        for(int i = 0; i < 4; i++){
+            if(motors[i].getDirection() == DcMotor.Direction.FORWARD){
+                motors[i].setDirection(DcMotor.Direction.REVERSE);
+            }
+            else{
+                motors[i].setDirection(DcMotor.Direction.FORWARD);
+            }
+        }
     }
 
     /**

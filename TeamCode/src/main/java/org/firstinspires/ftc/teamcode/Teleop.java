@@ -7,17 +7,18 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 public class Teleop extends OpMode {
     OmegaBot robot;
+    double maxSpeed = .25;
 
-    public void init(){
+    public void init() {
         robot = new OmegaBot(telemetry, hardwareMap);
     }
 
     public void loop() {
-        double forward = .25 * gamepad1.left_stick_y;
-        double right = .25 * gamepad1.left_stick_x;
-        double clockwise = -.25 * gamepad1.right_stick_x;
-        double temp = forward * Math.cos(Math.toRadians(robot.getAngle())) + right * Math.sin(MathtoRadians(robot.getAngle()));
-        right = -1 * forward * Math.sin(Math.toRadians(robot.getAngle())) + right * Math.sin(MathtoRadians(robot.getAngle()));
+        double forward = gamepad1.left_stick_y;
+        double right = -gamepad1.left_stick_x;
+        double clockwise = gamepad1.right_stick_x;
+        double temp = forward * Math.cos(Math.toRadians(robot.getAngle())) - right * Math.sin(Math.toRadians(robot.getAngle()));
+        right = forward * Math.sin(Math.toRadians(robot.getAngle())) + right * Math.cos(Math.toRadians(robot.getAngle()));
         forward = temp;
 
         double front_left = forward + clockwise + right;
@@ -35,11 +36,11 @@ public class Teleop extends OpMode {
         if (Math.abs(rear_left) > max) max = Math.abs(rear_left);
         if (Math.abs(rear_right) > max) max = Math.abs(rear_right);
 
-        if (max > 1) {
-            front_left /= max;
-            front_right /= max;
-            rear_left /= max;
-            rear_right /= max;
+        if (max > maxSpeed) {
+            front_left /= (max/maxSpeed);
+            front_right /= (max/maxSpeed);
+            rear_left /= (max/maxSpeed);
+            rear_right /= (max/maxSpeed);
         }
 
         robot.frontLeft.setPower(front_left);
@@ -49,26 +50,29 @@ public class Teleop extends OpMode {
 
         telemetry.addData("angle: ", robot.getAngle());
 
-        robot.leftIntake.setPower(-1);
-        robot.rightIntake.setPower(1);
-
         if (gamepad2.a) {
             robot.pivot.setPower(0.5);
             robot.leftIntake.setPower(-1);
             robot.rightIntake.setPower(1);
         } else if (gamepad2.y) {
             robot.pivot.setPower(-.5);
-        } else if (gamepad2.right_bumper) {
-            robot.leftIntake.setPower(-1);
-            robot.rightIntake.setPower(1);
-        } else if (gamepad2.left_bumper) {
-            robot.leftIntake.setPower(1);
-            robot.rightIntake.setPower(-1);
+
         } else {
             robot.pivot.setPower(0);
             robot.leftIntake.setPower(0);
             robot.rightIntake.setPower(0);
         }
+
+         if (gamepad2.right_bumper) {
+        robot.leftIntake.setPower(-1);
+        robot.rightIntake.setPower(1);
+    } else if (gamepad2.left_bumper) {
+        robot.leftIntake.setPower(1);
+        robot.rightIntake.setPower(-1);
+         } else {
+             robot.leftIntake.setPower(0);
+             robot.rightIntake.setPower(0);
+         }
 
         if(gamepad2.b) {
             robot.extension.setPower(0.5);
