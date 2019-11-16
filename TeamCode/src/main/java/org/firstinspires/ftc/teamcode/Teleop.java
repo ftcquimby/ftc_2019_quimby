@@ -59,6 +59,8 @@ public class Teleop extends OpMode {
 
         } else {
             robot.pivot.setPower(0);
+            robot.leftIntake.setPower(0);
+            robot.rightIntake.setPower(0);
         }
 
          if (gamepad2.right_bumper) {
