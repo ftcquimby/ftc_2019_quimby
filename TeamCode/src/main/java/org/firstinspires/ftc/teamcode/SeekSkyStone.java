@@ -8,12 +8,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaSkyStone;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TfodSkyStone;
+
+import java.util.List;
 
 @Autonomous(name = "SeekSkyStone (Blocks to Java)", group = "")
 public class SeekSkyStone extends LinearOpMode {
 
-    private OmegaBot Robot;
+    private OmegaBot robot;
 
     private VuforiaSkyStone vuforiaSkyStone;
     private TfodSkyStone tfodSkyStone;
@@ -56,23 +59,23 @@ public class SeekSkyStone extends LinearOpMode {
         // Set target ratio of object height to image
         // height value corresponding to the length
         // of the robot's neck.
-        TargetHeightRatio = 0.8;
+        double TargetHeightRatio = 0.8;
         waitForStart();
         tfodSkyStone.activate();
         // We'll loop until gold block captured or time is up
-        SkystoneFound = false;
+        boolean SkystoneFound = false;
         while (opModeIsActive() && !SkystoneFound) {
             // Get list of current recognitions.
-            recognitions = tfodSkyStone.getRecognitions();
+            List<Recognition> recognitions = tfodSkyStone.getRecognitions();
             // Report number of recognitions.
             telemetry.addData("Objects Recognized", recognitions.size());
             // If some objects detected...
             if (recognitions.size() > 0) {
                 // ...let's count how many are gold.
-                SkystoneCount = 0;
+                int SkystoneCount = 0;
                 // Step through the stones detected.
                 // TODO: Enter the type for variable named recognition
-                for (UNKNOWN_TYPE recognition : recognitions) {
+                for (Recognition recognition : recognitions) {
                     if (recognition.getLabel().equals("Skystone")) {
                         // A Skystone has been detected.
                         SkystoneCount = SkystoneCount + 1;
@@ -81,7 +84,7 @@ public class SeekSkyStone extends LinearOpMode {
                         // using the information from the first Skystone.
                         // We don't need to calculate turn angle to Skystone
                         // because TensorFlow has estimated it for us.
-                        ObjectAngle = recognition.estimateAngleToObject(AngleUnit.DEGREES);
+                        double ObjectAngle = recognition.estimateAngleToObject(AngleUnit.DEGREES);
                         // Negative angle means Skystone is left, else right.
                         telemetry.addData("Estimated Angle", ObjectAngle);
                         if (ObjectAngle > 0) {
@@ -90,16 +93,16 @@ public class SeekSkyStone extends LinearOpMode {
                             telemetry.addData("Direction", "Left");
                         }
                         // Calculate power levels for turn toward Skystone.
-                        LeftPower = 0.25 * (ObjectAngle / 45);
-                        RightPower = -0.25 * (ObjectAngle / 45);
+                        double LeftPower = 0.25 * (ObjectAngle / 45);
+                        double RightPower = -0.25 * (ObjectAngle / 45);
                         // We'll be comparing the Skystone height
                         // to the height of the video image to estimate
                         // how close the robot is to the Skystone.
-                        ImageHeight = recognition.getImageHeight();
-                        ObjectHeight = recognition.getHeight();
+                        double ImageHeight = recognition.getImageHeight();
+                        double ObjectHeight = recognition.getHeight();
                         // Calculate height of Skystone relative to image height.
                         // Larger ratio means robot is closer to Skystone.
-                        ObjectHeightRatio = ObjectHeight / ImageHeight;
+                        double ObjectHeightRatio = ObjectHeight / ImageHeight;
                         telemetry.addData("HeightRatio", ObjectHeightRatio);
                         // Use height ratio to determine distance.
                         // If height ratio larger than (target - tolerance)...

@@ -34,8 +34,8 @@ public class OmegaBot {
     DcMotor.RunMode myRunMode = DcMotor.RunMode.RUN_USING_ENCODER;
     public OmegaDriveTrain drivetrain;
 
-    //3.77953-inch diameter wheels, 1 wheel rotations per 1 motor rotation; all Yellow Jacket 19.2:1 motors for wheels (538 ticks per rev for 1:1); 27 inch turning diameter
-    final double ticksPerInch = (538 / 1.0) / (3.77953 * Math.PI);
+    //3.937-inch diameter wheels, 1 wheel rotations per 1 motor rotation; all Yellow Jacket 19.2:1 motors for wheels (537.6 ticks per rev for 1:1); 27 inch turning diameter
+    final double ticksPerInch = (537.6 / 1.0) / (3.937 * Math.PI);
     final double ticksPerDegree = ticksPerInch * 27 * Math.PI / 360.0 * (2.0 / 3); //2.0 / 3 is random scale factor
     final double turnTolerance = 2; //2 degrees error tolerance
     final double driveTolerance = 8;

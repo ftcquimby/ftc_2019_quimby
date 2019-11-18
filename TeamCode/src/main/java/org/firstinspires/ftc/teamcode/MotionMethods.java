@@ -18,9 +18,23 @@ public class MotionMethods {
         this.opMode = opMode;
     }
 
+    public void moveMotionProfile(double inches, double power){//power is between 0 and 1
+        double maxVel = 312 * 3.937 / 60000; // 312 is the rotations per minute, 3.937 is the inches per rotation (based on wheel circumference), 60000 is the number of milliseconds in a minute
+        double macAcc = maxVel / 1300; //1300 is the number of milliseconds it takes to accelerate to full speed
+        MotionProfileGenerator generator = new MotionProfileGenerator(maxVel * power, macAcc);//multiply by power cuz its a number between 0 and 1 so it scales
+        double[] motionProfile = generator.generateProfile(inches);
+        double[] distanceProfile = generator.generateDistanceProfile(motionProfile);
+        ElapsedTime runtime = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+        runtime.reset();
+        while(runtime.milliseconds() < motionProfile.length){
+            robot.drivetrain.setVelocity(motionProfile[(int)runtime.milliseconds()]/maxVel);//TODO: use the distance profile + encoders to pid up in dis bicth
+        }
+    }
+
     public void movePID(double inches, double velocity) {
-        double target = robot.ticksPerInch * inches + robot.drivetrain.getAvgEncoderValueOfFrontWheels();
         DcMotor.RunMode originalMode = robot.frontLeft.getMode(); //Assume that all wheels have the same runmode
+        robot.drivetrain.setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        double target = robot.ticksPerInch * inches;
         robot.drivetrain.setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
         int count = 0;
         ElapsedTime runtime = new ElapsedTime();
@@ -85,6 +99,7 @@ public class MotionMethods {
         double right = Math.cos(Math.toRadians(heading));
         double forward = Math.sin(Math.toRadians(heading));
         telemetry.addData("heading", heading);
+        telemetry.update();
         double robotHeading = robot.getAngle();
         int[] encoderCounts = {robot.frontLeft.getCurrentPosition(),robot.frontRight.getCurrentPosition(),robot.backLeft.getCurrentPosition(),robot.backRight.getCurrentPosition()};
         ElapsedTime runtime = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
@@ -95,9 +110,8 @@ public class MotionMethods {
             distance--;//find a better way to do this w encoder counts
             double clockwise =  robot.getAngle() - robotHeading;
             clockwise *= turnGain;
-            clockwise = 0;
-            double temp = forward * Math.cos(Math.toRadians(robot.getAngle())) - right * Math.sin(Math.toRadians(robot.getAngle()));
-            right = forward * Math.sin(Math.toRadians(robot.getAngle())) + right * Math.cos(Math.toRadians(robot.getAngle()));
+            double temp = forward * Math.cos(Math.toRadians(robotHeading)) - right * Math.sin(Math.toRadians(robotHeading));
+            right = forward * Math.sin(Math.toRadians(robotHeading)) + right * Math.cos(Math.toRadians(robotHeading));
             forward = temp * moveGain * distance;
             right = right * moveGain * distance;
 

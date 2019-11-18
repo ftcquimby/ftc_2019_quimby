@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 public class MotionProfileGenerator {
-    private double maxVel;
-    private double maxAcc;
+    public double maxVel;
+    public double maxAcc;
     private double distThreshold;
     private int accTime;
 
@@ -19,7 +19,7 @@ public class MotionProfileGenerator {
     }
 
     public double[] generateProfile(double distance){
-        double[] motionProfile = new double[1];
+        double[] motionProfile;
         if(distance > distThreshold){
             double maxVelTime = ((distance - distThreshold)/maxVel);
             int runTime = (int) (maxVelTime + 2 * accTime);
@@ -31,6 +31,16 @@ public class MotionProfileGenerator {
                     motionProfile[ms] = maxVel;
                 }else if(ms < runTime){
                     motionProfile[ms] = maxVel - (ms - (runTime - accTime - maxVelTime)*maxAcc);
+                }
+            }
+        }else{
+            int time = (int) (Math.sqrt(distance/maxAcc) + .5);
+            motionProfile = new double[time * 2];
+            for(int ms = 0; ms < time * 2; ms++){
+                if(ms < time){
+                    motionProfile[ms] = maxAcc * ms;
+                }else{
+                    motionProfile[ms] = 2*time - maxAcc*ms;
                 }
             }
         }
