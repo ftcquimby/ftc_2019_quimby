@@ -26,7 +26,7 @@ public class MotionMethods {
         double[] distanceProfile = generator.generateDistanceProfile(motionProfile);
         ElapsedTime runtime = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         runtime.reset();
-        while(runtime.milliseconds() < motionProfile.length){
+        while(runtime.milliseconds() < motionProfile.length && opMode.opModeIsActive()){
             robot.drivetrain.setVelocity(motionProfile[(int)runtime.milliseconds()]/maxVel);//TODO: use the distance profile + encoders to pid up in dis bicth
         }
     }
