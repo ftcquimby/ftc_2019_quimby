@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+@TeleOp(name = "LinearTeleop", group = "prototype")
 public class LinearTeleop extends LinearOpMode {
     private OmegaBot robot;
     private ElapsedTime runtime;
-    double maxSpeed = 0.25;
+    double maxSpeed = 1;
 
     public void runOpMode(){
         robot = new OmegaBot(telemetry,hardwareMap);
@@ -14,23 +16,9 @@ public class LinearTeleop extends LinearOpMode {
         runtime = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         while(opModeIsActive()){
             drivetrainProcess();
-            if(gamepad2.a){
-                moveArm(-30);
-            }else if (gamepad2.b){
-                moveArm(30);
-            }
-            if(gamepad2.x){
-                robot.pivot.setPosition(0);
-                robot.leftGripper.setPosition(0);
-                robot.rightGripper.setPosition(0);
-                robot.blockGripper.setPosition(0);
-            }
-            if(gamepad2.y){
-                robot.pivot.setPosition(1);
-                robot.leftGripper.setPosition(1);
-                robot.rightGripper.setPosition(1);
-                robot.blockGripper.setPosition(1);
-            }
+            armProcess();
+            servoProcess();
+            intakeProcess();
         }
     }
 
@@ -46,13 +34,51 @@ public class LinearTeleop extends LinearOpMode {
         }
     }
 
+    public void servoProcess(){
+        if(gamepad2.x){
+            robot.pivot.setPosition(0);
+        }else if(gamepad2.y){
+            robot.pivot.setPosition(.33);
+        }
+        if(gamepad2.right_bumper){
+            robot.blockGripper.setPosition(.65);
+        }else if(gamepad2.left_bumper){
+            robot.blockGripper.setPosition(.5);
+        }
+    }
+
+    public void armProcess(){
+        if(gamepad2.a){
+            robot.arm.setPower(.5);
+            //moveArm(-30);
+        }else if (gamepad2.b){
+            //moveArm(30);
+            robot.arm.setPower(-.5);
+        }else{
+            robot.arm.setPower(0);
+        }
+    }
+
+    public void intakeProcess(){
+        if(gamepad2.right_trigger > .5){
+            robot.leftIntake.setPower(1);
+            robot.rightIntake.setPower(-1);
+        }else if(gamepad2.left_trigger > .5){
+            robot.leftIntake.setPower(0);
+            robot.rightIntake.setPower(0);
+        }else{
+            robot.leftIntake.setPower(-1);
+            robot.rightIntake.setPower(1);
+        }
+    }
+
     public void drivetrainProcess(){
         double forward = gamepad1.left_stick_y;
         double right = -gamepad1.left_stick_x;
         double clockwise = gamepad1.right_stick_x;
-        double temp = forward * Math.cos(Math.toRadians(robot.getAngle())) - right * Math.sin(Math.toRadians(robot.getAngle()));
-        right = forward * Math.sin(Math.toRadians(robot.getAngle())) + right * Math.cos(Math.toRadians(robot.getAngle()));
-        forward = temp;
+        //double temp = forward * Math.cos(Math.toRadians(robot.getAngle())) - right * Math.sin(Math.toRadians(robot.getAngle()));
+        //right = forward * Math.sin(Math.toRadians(robot.getAngle())) + right * Math.cos(Math.toRadians(robot.getAngle()));
+        //forward = temp;
 
         double front_left = forward + clockwise + right;
         double front_right = forward - clockwise - right;
