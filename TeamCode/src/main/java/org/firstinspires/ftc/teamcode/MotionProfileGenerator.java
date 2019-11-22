@@ -37,10 +37,10 @@ public class MotionProfileGenerator {
             int time = (int) (Math.sqrt(distance/maxAcc) + .5);
             motionProfile = new double[time * 2];
             for(int ms = 0; ms < time * 2; ms++){
-                if(ms < time){
+                if(ms <= time){
                     motionProfile[ms] = maxAcc * ms;
                 }else{
-                    motionProfile[ms] = 2*time - maxAcc*ms;
+                    motionProfile[ms] = maxAcc * (2 * time - ms);
                 }
             }
         }

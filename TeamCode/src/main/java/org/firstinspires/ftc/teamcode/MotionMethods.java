@@ -26,9 +26,19 @@ public class MotionMethods {
         double[] distanceProfile = generator.generateDistanceProfile(motionProfile);
         ElapsedTime runtime = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         runtime.reset();
+        double heading = robot.getAngle();
         while(runtime.milliseconds() < motionProfile.length && opMode.opModeIsActive()){
-            robot.drivetrain.setVelocity(motionProfile[(int)runtime.milliseconds()]/maxVel);//TODO: use the distance profile + encoders to pid up in dis bicth
+            int ms = (int) runtime.milliseconds();
+            if (ms < motionProfile.length) {
+                double adjust = 0.04 * (robot.getAngle()-heading);
+                robot.frontLeft.setPower(motionProfile[ms] / maxVel + adjust);
+                robot.backLeft.setPower(motionProfile[ms] / maxVel + adjust);
+                robot.frontRight.setPower(motionProfile[ms] / maxVel - adjust);
+                robot.backRight.setPower(motionProfile[ms] / maxVel - adjust);
+                //robot.drivetrain.setVelocity(motionProfile[(int) runtime.milliseconds()] / maxVel);//TODO: use the distance profile + encoders to pid up in dis bicth
+            }
         }
+        robot.drivetrain.setVelocity(0);
     }
 
     public void movePID(double inches, double velocity) {

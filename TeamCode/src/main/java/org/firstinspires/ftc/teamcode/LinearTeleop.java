@@ -9,11 +9,14 @@ public class LinearTeleop extends LinearOpMode {
     private OmegaBot robot;
     private ElapsedTime runtime;
     double maxSpeed = 1;
+    boolean intakeOn = true;
 
     public void runOpMode(){
         robot = new OmegaBot(telemetry,hardwareMap);
         waitForStart();
         runtime = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+        robot.leftIntake.setPower(1);
+        robot.rightIntake.setPower(-1);
         while(opModeIsActive()){
             drivetrainProcess();
             armProcess();
@@ -41,9 +44,9 @@ public class LinearTeleop extends LinearOpMode {
             robot.pivot.setPosition(.33);
         }
         if(gamepad2.right_bumper){
-            robot.blockGripper.setPosition(.65);
+            robot.blockGripper.setPosition(.55);
         }else if(gamepad2.left_bumper){
-            robot.blockGripper.setPosition(.5);
+            robot.blockGripper.setPosition(.4);
         }
     }
 
@@ -61,21 +64,31 @@ public class LinearTeleop extends LinearOpMode {
 
     public void intakeProcess(){
         if(gamepad2.right_trigger > .5){
-            robot.leftIntake.setPower(1);
-            robot.rightIntake.setPower(-1);
+            if(intakeOn) {
+                robot.leftIntake.setPower(0);
+                robot.rightIntake.setPower(0);
+                intakeOn = false;
+            }else{
+                robot.leftIntake.setPower(1);
+                robot.rightIntake.setPower(-1);
+                intakeOn = true;
+            }
         }else if(gamepad2.left_trigger > .5){
-            robot.leftIntake.setPower(0);
-            robot.rightIntake.setPower(0);
-        }else{
             robot.leftIntake.setPower(-1);
             robot.rightIntake.setPower(1);
+        }else if (intakeOn){
+            robot.leftIntake.setPower(1);
+            robot.rightIntake.setPower(-1);
+        }else {
+            robot.leftIntake.setPower(0);
+            robot.rightIntake.setPower(0);
         }
     }
 
     public void drivetrainProcess(){
         double forward = gamepad1.left_stick_y;
         double right = -gamepad1.left_stick_x;
-        double clockwise = gamepad1.right_stick_x;
+        double clockwise = gamepad1.right_stick_x *.75;
         //double temp = forward * Math.cos(Math.toRadians(robot.getAngle())) - right * Math.sin(Math.toRadians(robot.getAngle()));
         //right = forward * Math.sin(Math.toRadians(robot.getAngle())) + right * Math.cos(Math.toRadians(robot.getAngle()));
         //forward = temp;
