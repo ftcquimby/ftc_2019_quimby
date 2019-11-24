@@ -21,7 +21,9 @@ public class LinearTeleop extends LinearOpMode {
             drivetrainProcess();
             armProcess();
             servoProcess();
-            intakeProcess();
+            intakeProcessIn();
+            intakeProcessOut();
+            foundationGrippers();
         }
     }
 
@@ -41,53 +43,79 @@ public class LinearTeleop extends LinearOpMode {
         if(gamepad2.x){
             robot.pivot.setPosition(0);
         }else if(gamepad2.y){
-            robot.pivot.setPosition(.33);
+            robot.pivot.setPosition(.29);
         }
         if(gamepad2.right_bumper){
-            robot.blockGripper.setPosition(.55);
+            robot.blockGripper.setPosition(.3);
         }else if(gamepad2.left_bumper){
-            robot.blockGripper.setPosition(.4);
+            robot.blockGripper.setPosition(.25);
+        }
+    }
+
+    public void foundationGrippers(){
+        if(gamepad1.left_bumper){
+            robot.leftGripper.setPosition(.66);
+            robot.rightGripper.setPosition(.33);
+        }
+        else if (gamepad1.right_bumper){
+            robot.leftGripper.setPosition(0);
+            robot.rightGripper.setPosition(1);
         }
     }
 
     public void armProcess(){
         if(gamepad2.a){
-            robot.arm.setPower(.5);
+            robot.arm.setPower(.75);
             //moveArm(-30);
         }else if (gamepad2.b){
             //moveArm(30);
-            robot.arm.setPower(-.5);
+            robot.arm.setPower(-.75);
         }else{
             robot.arm.setPower(0);
         }
     }
 
-    public void intakeProcess(){
-        if(gamepad2.right_trigger > .5){
-            if(intakeOn) {
+    public void intakeProcessIn(){
+        if(gamepad2.right_trigger > .5) {
+            if (gamepad2.left_trigger > .5 && gamepad2.right_trigger > .5){
                 robot.leftIntake.setPower(0);
                 robot.rightIntake.setPower(0);
-                intakeOn = false;
-            }else{
+            }
+            else {
                 robot.leftIntake.setPower(1);
                 robot.rightIntake.setPower(-1);
-                intakeOn = true;
             }
-        }else if(gamepad2.left_trigger > .5){
-            robot.leftIntake.setPower(-1);
-            robot.rightIntake.setPower(1);
-        }else if (intakeOn){
-            robot.leftIntake.setPower(1);
-            robot.rightIntake.setPower(-1);
-        }else {
+
+        }
+
+        else {
             robot.leftIntake.setPower(0);
             robot.rightIntake.setPower(0);
         }
     }
+    public void intakeProcessOut(){
+        if (gamepad2.left_trigger > .5){
+            if (gamepad2.left_trigger > .5 && gamepad2.right_trigger > .5){
+                robot.leftIntake.setPower(0);
+                robot.rightIntake.setPower(0);
+            }
+            else {
+                robot.leftIntake.setPower(-1);
+                robot.rightIntake.setPower(1);
+            }
+
+        }
+
+        else {
+            robot.leftIntake.setPower(0);
+            robot.rightIntake.setPower(0);
+        }
+
+    }
 
     public void drivetrainProcess(){
-        double forward = gamepad1.left_stick_y;
-        double right = -gamepad1.left_stick_x;
+        double forward = -gamepad1.left_stick_y;
+        double right = gamepad1.left_stick_x;
         double clockwise = gamepad1.right_stick_x *.75;
         //double temp = forward * Math.cos(Math.toRadians(robot.getAngle())) - right * Math.sin(Math.toRadians(robot.getAngle()));
         //right = forward * Math.sin(Math.toRadians(robot.getAngle())) + right * Math.cos(Math.toRadians(robot.getAngle()));

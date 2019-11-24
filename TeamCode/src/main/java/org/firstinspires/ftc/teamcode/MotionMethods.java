@@ -31,12 +31,15 @@ public class MotionMethods {
             int ms = (int) runtime.milliseconds();
             if (ms < motionProfile.length) {
                 double adjust = 0.04 * (robot.getAngle()-heading);
-                robot.frontLeft.setPower(motionProfile[ms] / maxVel + adjust);
-                robot.backLeft.setPower(motionProfile[ms] / maxVel + adjust);
-                robot.frontRight.setPower(motionProfile[ms] / maxVel - adjust);
-                robot.backRight.setPower(motionProfile[ms] / maxVel - adjust);
+                robot.frontLeft.setPower(motionProfile[ms] / maxVel );//+ adjust);
+                robot.backLeft.setPower(motionProfile[ms] / maxVel );//+ adjust);
+                robot.frontRight.setPower(motionProfile[ms] / maxVel );//- adjust);
+                robot.backRight.setPower(motionProfile[ms] / maxVel) ;//- adjust);
                 //robot.drivetrain.setVelocity(motionProfile[(int) runtime.milliseconds()] / maxVel);//TODO: use the distance profile + encoders to pid up in dis bicth
             }
+
+
+
         }
         robot.drivetrain.setVelocity(0);
     }
