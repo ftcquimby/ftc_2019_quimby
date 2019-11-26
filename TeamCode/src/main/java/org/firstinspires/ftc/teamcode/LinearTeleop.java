@@ -46,9 +46,9 @@ public class LinearTeleop extends LinearOpMode {
             robot.pivot.setPosition(.29);
         }
         if(gamepad2.right_bumper){
-            robot.blockGripper.setPosition(.3);
+            robot.blockGripper.setPosition(.45 );
         }else if(gamepad2.left_bumper){
-            robot.blockGripper.setPosition(.25);
+            robot.blockGripper.setPosition(.29);
         }
     }
 

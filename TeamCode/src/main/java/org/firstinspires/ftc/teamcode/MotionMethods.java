@@ -30,11 +30,11 @@ public class MotionMethods {
         while(runtime.milliseconds() < motionProfile.length && opMode.opModeIsActive()){
             int ms = (int) runtime.milliseconds();
             if (ms < motionProfile.length) {
-                double adjust = 0.04 * (robot.getAngle()-heading);
-                robot.frontLeft.setPower(motionProfile[ms] / maxVel );//+ adjust);
-                robot.backLeft.setPower(motionProfile[ms] / maxVel );//+ adjust);
-                robot.frontRight.setPower(motionProfile[ms] / maxVel );//- adjust);
-                robot.backRight.setPower(motionProfile[ms] / maxVel) ;//- adjust);
+                double adjust = 0;//0.04 * (robot.getAngle()-heading);
+                robot.frontLeft.setPower(motionProfile[ms] / maxVel + adjust);
+                robot.backLeft.setPower(motionProfile[ms] / maxVel + adjust);
+                robot.frontRight.setPower(motionProfile[ms] / maxVel - adjust);
+                robot.backRight.setPower(motionProfile[ms] / maxVel - adjust);
                 //robot.drivetrain.setVelocity(motionProfile[(int) runtime.milliseconds()] / maxVel);//TODO: use the distance profile + encoders to pid up in dis bicth
             }
 
@@ -123,10 +123,15 @@ public class MotionMethods {
             distance--;//find a better way to do this w encoder counts
             double clockwise =  robot.getAngle() - robotHeading;
             clockwise *= turnGain;
+            /**
             double temp = forward * Math.cos(Math.toRadians(robotHeading)) - right * Math.sin(Math.toRadians(robotHeading));
             right = forward * Math.sin(Math.toRadians(robotHeading)) + right * Math.cos(Math.toRadians(robotHeading));
             forward = temp * moveGain * distance;
             right = right * moveGain * distance;
+             **/
+
+            right  = right * moveGain * distance;
+            forward = forward * moveGain * distance;
 
             double front_left = forward + clockwise + right;
             double front_right = forward - clockwise -right;
