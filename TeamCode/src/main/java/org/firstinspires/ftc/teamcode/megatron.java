@@ -8,7 +8,7 @@ public class megatron extends LinearOpMode {
     public void runOpMode(){
         waitForStart();
         while(opModeIsActive()){
-            telemetry.addData("I want to say", "Hello");
+            telemetry.addData("I want to say", "Hello world");
             telemetry.update();
         }
     }
