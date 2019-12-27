@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -20,6 +22,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  */
 
 public class OmegaBot {
+    public boolean logArmPosition;
+    public boolean logColorData;
     public Telemetry telemetry;
     public HardwareMap hardwareMap;
     public DcMotor frontLeft;
@@ -31,13 +35,27 @@ public class OmegaBot {
     public DcMotor leftIntake;
     public DcMotor rightIntake;
 
-    public Servo pivot;
-    public Servo blockGripper;
+    public Servo hand_y; //cable 2
+    public Servo hand_x; //cable 1
+    public Servo fingers; //cable 3
     public Servo leftGripper;
     public Servo rightGripper;
 
+    public DistanceSensor distanceSensor1;
+    public DistanceSensor distanceSensor2;
+
     DcMotor.RunMode myRunMode = DcMotor.RunMode.RUN_USING_ENCODER;
     public OmegaDriveTrain drivetrain;
+
+    //CONSTANTS
+    public double HANDX_0DEGREES = .1;
+    public double HANDX_90DEGREES = .5;
+    public double FINGERS_GRAB = .29;
+    public double FINGERS_OPEN = .41;
+    public double LEFT_FOUNDATION_GRIPPER_GRAB = .572;
+    public double LEFT_FOUNDATION_GRIPPER_RELEASE = .172;
+    public double RIGHT_FOUNDATION_GRIPPER_GRAB = .82;
+    public double RIGHT_FOUNDATION_GRIPPER_RELEASE = .4;
 
     //3.937-inch diameter wheels, 1 wheel rotations per 1 motor rotation; all Yellow Jacket 19.2:1 motors for wheels (537.6 ticks per rev for 1:1); 27 inch turning diameter
     final double ticksPerInch = (537.6 / 1.0) / (3.937 * Math.PI);
@@ -56,6 +74,7 @@ public class OmegaBot {
     double AUTO_GOLD_RADIUS = 110;
 
     OmegaBot(Telemetry telemetry, HardwareMap hardwareMap) {
+        this.logArmPosition = false;
         this.telemetry = telemetry;
         this.hardwareMap = hardwareMap;
 
@@ -64,14 +83,28 @@ public class OmegaBot {
         backLeft = hardwareMap.get(DcMotor.class, "back_left");
         backRight = hardwareMap.get(DcMotor.class, "back_right");
         arm = hardwareMap.get(DcMotor.class, "arm");
-        //extension = hardwareMap.get(DcMotor.class, "extension");
+        extension = hardwareMap.get(DcMotor.class, "extension");
         leftIntake = hardwareMap.get(DcMotor.class, "left_intake");
         rightIntake = hardwareMap.get(DcMotor.class, "right_intake");
 
-        pivot = hardwareMap.get(Servo.class, "pivot");
-        blockGripper = hardwareMap.get(Servo.class, "block_gripper");
+        telemetry.clearAll();
+
+        hand_x = hardwareMap.get(Servo.class, "hand_x");
+        hand_y = hardwareMap.get(Servo.class, "hand_y");
+        hand_y.setDirection(Servo.Direction.REVERSE);
+        fingers = hardwareMap.get(Servo.class, "fingers");
+        fingers.setPosition(.41 );
+
         leftGripper = hardwareMap.get(Servo.class, "left_gripper");
+        leftGripper.setDirection(Servo.Direction.REVERSE);
         rightGripper = hardwareMap.get(Servo.class, "right_gripper");
+        leftGripper.setPosition(LEFT_FOUNDATION_GRIPPER_RELEASE);
+        rightGripper.setPosition(RIGHT_FOUNDATION_GRIPPER_RELEASE);
+
+
+        distanceSensor1 = hardwareMap.get(DistanceSensor.class, "distance_sensor1");
+        distanceSensor2 = hardwareMap.get(DistanceSensor.class, "distance_sensor2");
+
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
         // and named "imu1".
@@ -89,8 +122,18 @@ public class OmegaBot {
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //pivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //extension.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);//MadanBellam
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);//MadanBellam
+        arm.setTargetPosition(1);
+        arm.setPower(.2);
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);//MadanBellam
+
+        extension.setMode(DcMotor.RunMode.RUN_USING_ENCODER);//MadanBellam
+        extension.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);//MadanBellam
+        extension.setTargetPosition(1);
+        extension.setPower(.2);
+        extension.setMode(DcMotor.RunMode.RUN_TO_POSITION);//MadanBellam
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -99,8 +142,8 @@ public class OmegaBot {
 
         frontLeft.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         frontRight.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        backLeft.setDirection(DcMotor.Direction.FORWARD);
-        backRight.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
 
         frontLeft.setPower(0);
         frontRight.setPower(0);

@@ -19,6 +19,9 @@ public class MotionMethods {
     }
 
     public void moveMotionProfile(double inches, double power){//power is between 0 and 1
+        if(inches == 0){
+            return;
+        }
         double maxVel = 312 * 3.937 / 60000; // 312 is the rotations per minute, 3.937 is the inches per rotation (based on wheel circumference), 60000 is the number of milliseconds in a minute
         double macAcc = maxVel / 1300; //1300 is the number of milliseconds it takes to accelerate to full speed
         MotionProfileGenerator generator = new MotionProfileGenerator(maxVel * power, macAcc);//multiply by power cuz its a number between 0 and 1 so it scales
@@ -37,9 +40,6 @@ public class MotionMethods {
                 robot.backRight.setPower(motionProfile[ms] / maxVel - adjust);
                 //robot.drivetrain.setVelocity(motionProfile[(int) runtime.milliseconds()] / maxVel);//TODO: use the distance profile + encoders to pid up in dis bicth
             }
-
-
-
         }
         robot.drivetrain.setVelocity(0);
     }
