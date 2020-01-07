@@ -20,6 +20,8 @@ public class LinearTeleop extends LinearOpMode {
     private double handYPosition = .77;//hand_y position
     private int previousArmPositionRange = 0;
     private int curArmExtension = 0;
+    private boolean button1xPressed = false;
+    private boolean button1yPressed = false;
 
     private boolean brickFound1 = false;
     private boolean brickFound2 = false;
@@ -49,17 +51,34 @@ public class LinearTeleop extends LinearOpMode {
         }
     }
 
+    //Extend the arm based on Gamepad1 x and y button presses. One extension per press
     public void processExtension(){
-        if (gamepad1.x){
-            curArmExtension = curArmExtension - 100;
-            robot.extension.setTargetPosition(curArmExtension);
-            robot.extension.setPower(.1);
+        if (gamepad1.x == true) { //Button 1x pressed
+            if (button1xPressed == false) { //We are seeing it pressed for the first time
+                button1xPressed = true;
+                curArmExtension = curArmExtension - 100;
+                robot.extension.setTargetPosition(curArmExtension);
+                robot.extension.setPower(.1);
+            } else {
+                //We already saw this button press and moved the arm extension - do not do it again now
+            }
+        } else {
+            button1xPressed = false; //Button 1x is not pressed any more
         }
-        if (gamepad1.y){
-            curArmExtension = curArmExtension + 100;
-            robot.extension.setTargetPosition(curArmExtension);
-            robot.extension.setPower(.1);
+
+        if (gamepad1.y == true) { //Button 1x pressed
+            if (button1yPressed == false) { //We are seeing it pressed for the first time
+                button1yPressed = true;
+                curArmExtension = curArmExtension + 100;
+                robot.extension.setTargetPosition(curArmExtension);
+                robot.extension.setPower(.1);
+            } else {
+                //We already saw this button press and moved the arm extension - do not do it again now
+            }
+        } else {
+            button1yPressed = false; //Button 1x is not pressed any more
         }
+
     }
     //Using the Rev Color Sensor V3 for Distance Sensing using the Infra Red Range Sensor in it
     //  - 5cm to 25cm
