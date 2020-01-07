@@ -12,11 +12,17 @@ public class MegaBot {
     public Servo hand_x;
     public Servo fingers;
 
+    public DcMotor extension;
+    public DcMotor leftIntake;
+    public DcMotor rightIntake;
 
     MegaBot(Telemetry telemetry, HardwareMap hardwareMap){
+        extension = hardwareMap.get(DcMotor.class, "extension");
         hand_x = hardwareMap.get(Servo.class, "hand_x");
         hand_y = hardwareMap.get(Servo.class, "hand_y");
         fingers = hardwareMap.get(Servo.class, "fingers");
+        leftIntake =  hardwareMap.get(DcMotor.class, "left_intake");
+        rightIntake =  hardwareMap.get(DcMotor.class, "right_intake");
  /*       arm = hardwareMap.get(DcMotor.class, "arm");
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

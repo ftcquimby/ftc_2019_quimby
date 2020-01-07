@@ -19,6 +19,7 @@ public class LinearTeleop extends LinearOpMode {
     private int armPosition = 0;
     private double handYPosition = .77;//hand_y position
     private int previousArmPositionRange = 0;
+    private int curArmExtension = 0;
 
     private boolean brickFound1 = false;
     private boolean brickFound2 = false;
@@ -31,6 +32,7 @@ public class LinearTeleop extends LinearOpMode {
         robot.rightIntake.setPower(-1);
 
         while(opModeIsActive()){
+            processExtension();
             stoneFoundProcess();
             drivetrainProcess();
             armProcess();
@@ -47,6 +49,18 @@ public class LinearTeleop extends LinearOpMode {
         }
     }
 
+    public void processExtension(){
+        if (gamepad1.x){
+            curArmExtension = curArmExtension - 100;
+            robot.extension.setTargetPosition(curArmExtension);
+            robot.extension.setPower(.1);
+        }
+        if (gamepad1.y){
+            curArmExtension = curArmExtension + 100;
+            robot.extension.setTargetPosition(curArmExtension);
+            robot.extension.setPower(.1);
+        }
+    }
     //Using the Rev Color Sensor V3 for Distance Sensing using the Infra Red Range Sensor in it
     //  - 5cm to 25cm
     //  - - Avoid other Infra Red Light - like sunlight
