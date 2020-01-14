@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -19,18 +20,30 @@ public class Chaboya2019TeleOp extends LinearOpMode {
     private int armPosition = 0;
     private double handYPosition = .77;//hand_y position
     private int previousArmPositionRange = 0;
+    private int curArmExtension = 0;
+    private boolean button1xPressed = false;
+    private boolean button1yPressed = false;
+    private double curHandXPosition = 0;
+    private double curHandYPosition = 0;
+    private boolean button1aPressed = false;
+    private boolean button1bPressed = false;
 
     private boolean brickFound1 = false;
     private boolean brickFound2 = false;
 
     public void runOpMode(){
         robot = new Chaboya2019Base(telemetry,hardwareMap);
+
         waitForStart();
         runtime = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-        robot.leftIntake.setPower(1);
-        robot.rightIntake.setPower(-1);
+        //robot.leftIntake.setPower(1);
+        //robot.rightIntake.setPower(-1);
 
         while(opModeIsActive()){
+            //processManualExtension();
+            //handXManualProcess();
+
+            handYManualProcess();
             stoneFoundProcess();
             drivetrainProcess();
             armProcess();
@@ -40,11 +53,80 @@ public class Chaboya2019TeleOp extends LinearOpMode {
             intakeProcessOut();
             foundationGrippers();
 
+            //testMotors();
+
             //telemetry.addData("\n\rhand_x position: ", robot.hand_x.getPosition());
             //telemetry.addData("\n\rleft Foundation Gripper position: ", robot.leftGripper.getPosition());
             //telemetry.addData("\n\rright Foundation Gripper position: ", robot.rightGripper.getPosition());
             //telemetry.update();
         }
+    }
+
+
+    //Test Motors
+    public void testMotors(){
+        if (gamepad1.a == true){
+            robot.frontLeft.setPower(.2);
+            robot.frontRight.setPower(0);
+            robot.backLeft.setPower(0);
+            robot.backRight.setPower(0);
+        }else{
+            robot.frontLeft.setPower(0);
+        }
+        if (gamepad1.b == true){
+            robot.frontLeft.setPower(0);
+            robot.frontRight.setPower(.2);
+            robot.backLeft.setPower(0);
+            robot.backRight.setPower(0);
+        }else{
+            robot.frontRight.setPower(0);
+        }
+        if (gamepad1.x == true){
+            robot.frontLeft.setPower(0);
+            robot.frontRight.setPower(0);
+            robot.backLeft.setPower(.2);
+            robot.backRight.setPower(0);
+        }else{
+            robot.backLeft.setPower(0);
+        }
+        if (gamepad1.y == true){
+            robot.frontLeft.setPower(0);
+            robot.frontRight.setPower(0);
+            robot.backLeft.setPower(0);
+            robot.backRight.setPower(0.2);
+        }else{
+            robot.backRight.setPower(0);
+        }
+    }
+
+    //Extend the arm based on Gamepad1 x and y button presses. One extension per press
+    public void processManualExtension(){
+        if (gamepad1.x == true) { //Button 1x pressed
+            if (button1xPressed == false) { //We are seeing it pressed for the first time
+                button1xPressed = true;
+                curArmExtension = curArmExtension - 100;
+                robot.extension.setTargetPosition(curArmExtension);
+                robot.extension.setPower(.1);
+            } else {
+                //We already saw this button press and moved the arm extension - do not do it again now
+            }
+        } else {
+            button1xPressed = false; //Button 1x is not pressed any more
+        }
+
+        if (gamepad1.y == true) { //Button 1x pressed
+            if (button1yPressed == false) { //We are seeing it pressed for the first time
+                button1yPressed = true;
+                curArmExtension = curArmExtension + 100;
+                robot.extension.setTargetPosition(curArmExtension);
+                robot.extension.setPower(.1);
+            } else {
+                //We already saw this button press and moved the arm extension - do not do it again now
+            }
+        } else {
+            button1yPressed = false; //Button 1x is not pressed any more
+        }
+
     }
 
     //Using the Rev Color Sensor V3 for Distance Sensing using the Infra Red Range Sensor in it
@@ -87,26 +169,74 @@ public class Chaboya2019TeleOp extends LinearOpMode {
 
 
     public void handXManualProcess(){
+        if (gamepad1.a == true) { //Button 1a pressed
+            if (button1aPressed == false) { //We are seeing it pressed for the first time
+                button1aPressed = true;
+                curHandXPosition = curHandXPosition - .025;
+                robot.hand_x.setPosition(curHandXPosition);
+            } else {
+                //We already saw this button press and moved the arm extension - do not do it again now
+            }
+        } else {
+            button1aPressed = false; //Button 1x is not pressed any more
+        }
+
+        if (gamepad1.b == true) { //Button 1b pressed
+            if (button1bPressed == false) { //We are seeing it pressed for the first time
+                button1bPressed = true;
+                curHandXPosition = curHandXPosition + .025;
+                robot.hand_x.setPosition(curHandXPosition);
+            } else {
+                //We already saw this button press and moved the arm extension - do not do it again now
+            }
+        } else {
+            button1bPressed = false; //Button 1x is not pressed any more
+        }
+        /*
         if (gamepad1.x){
             robot.hand_x.setPosition(robot.HANDX_0DEGREES);
         }else if (gamepad1.y) {
             robot.hand_x.setPosition(robot.HANDX_90DEGREES);
         }
+        */
+
     }
 
     public void handYManualProcess(){
-        if (gamepad1.a){
-            robot.hand_y.setPosition(.77);
-        }else if (gamepad1.b) {
-            robot.hand_y.setPosition(.55);
+        if (gamepad1.a == true) { //Button 1a pressed
+            if (button1aPressed == false) { //We are seeing it pressed for the first time
+                button1aPressed = true;
+                curHandYPosition = curHandYPosition - .025;
+                robot.hand_x.setPosition(curHandYPosition);
+            } else {
+                //We already saw this button press and moved the arm extension - do not do it again now
+            }
+        } else {
+            button1aPressed = false; //Button 1x is not pressed any more
         }
-        telemetry.addData("\r\nHand Y Position =", handYPosition);
-        telemetry.update();
+
+        if (gamepad1.b == true) { //Button 1b pressed
+            if (button1bPressed == false) { //We are seeing it pressed for the first time
+                button1bPressed = true;
+                curHandYPosition = curHandYPosition + .025;
+                robot.hand_x.setPosition(curHandYPosition);
+            } else {
+                //We already saw this button press and moved the arm extension - do not do it again now
+            }
+        } else {
+            button1bPressed = false; //Button 1x is not pressed any more
+        }
+        /*
+        if (gamepad1.x){
+            robot.hand_x.setPosition(robot.HANDX_0DEGREES);
+        }else if (gamepad1.y) {
+            robot.hand_x.setPosition(robot.HANDX_90DEGREES);
+        }
+        */
+
     }
 
     public void servoProcess(){
-        //handXManualProcess();
-        //handYManualProcess();
 
         if(gamepad2.right_bumper){
             robot.fingers.setPosition(robot.FINGERS_OPEN);
@@ -334,6 +464,8 @@ public class Chaboya2019TeleOp extends LinearOpMode {
             }
             robot.armPrevStep = robot.armCurStep;
         }
+        telemetry.addData("\n\rHand Hang Step:", robot.armCurStep);
+        telemetry.update();
 
     }
 
