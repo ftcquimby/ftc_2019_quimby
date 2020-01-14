@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -20,22 +21,46 @@ public class LinearTeleop extends LinearOpMode {
     private double handYPosition = .77;//hand_y position
     private int previousArmPositionRange = 0;
     private int curArmExtension = 0;
+    private boolean button1xPressed = false;
+    private boolean button1yPressed = false;
 
     private boolean brickFound1 = false;
     private boolean brickFound2 = false;
 
     public void runOpMode(){
         robot = new OmegaBot(telemetry,hardwareMap);
+
+        robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);//MadanBellam
+        robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);//MadanBellam
+        robot.arm.setTargetPosition((int)robot.HANDHANGPOSITION[robot.armCurStep][2]);
+        robot.arm.setPower(.2);
+        robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);//MadanBellam
+        sleep((long)robot.HANDHANGPOSITION[robot.armCurStep][6]);
+
+        robot.extension.setMode(DcMotor.RunMode.RUN_USING_ENCODER);//MadanBellam
+        robot.extension.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);//MadanBellam
+        robot.extension.setTargetPosition((int)robot.HANDHANGPOSITION[robot.armCurStep][3]);
+        robot.extension.setPower(.2);
+        robot.extension.setMode(DcMotor.RunMode.RUN_TO_POSITION);//MadanBellam
+
+        robot.hand_x.setPosition(robot.HANDX_0DEGREES);
+        robot.hand_y.setPosition(robot.HANDHANGPOSITION[robot.armCurStep][1]);
+        robot.fingers.setPosition(robot.FINGERS_OPEN);
+        sleep((long)robot.HANDHANGPOSITION[robot.armCurStep][5]);
+
         waitForStart();
         runtime = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-        robot.leftIntake.setPower(1);
-        robot.rightIntake.setPower(-1);
+
+        //kick out any stone that is in the intake bay
+        //robot.leftIntake.setPower(1);
+        //robot.rightIntake.setPower(-1);
 
         while(opModeIsActive()){
-            processExtension();
+            //processExtension();
             stoneFoundProcess();
             drivetrainProcess();
             armProcess();
+            armProcess2();
             extensionProcess();
             servoProcess();
             intakeProcessIn();
@@ -49,17 +74,34 @@ public class LinearTeleop extends LinearOpMode {
         }
     }
 
+    //Extend the arm based on Gamepad1 x and y button presses. One extension per press
     public void processExtension(){
-        if (gamepad1.x){
-            curArmExtension = curArmExtension - 100;
-            robot.extension.setTargetPosition(curArmExtension);
-            robot.extension.setPower(.1);
+        if (gamepad1.x == true) { //Button 1x pressed
+            if (button1xPressed == false) { //We are seeing it pressed for the first time
+                button1xPressed = true;
+                curArmExtension = curArmExtension - 100;
+                robot.extension.setTargetPosition(curArmExtension);
+                robot.extension.setPower(.1);
+            } else {
+                //We already saw this button press and moved the arm extension - do not do it again now
+            }
+        } else {
+            button1xPressed = false; //Button 1x is not pressed any more
         }
-        if (gamepad1.y){
-            curArmExtension = curArmExtension + 100;
-            robot.extension.setTargetPosition(curArmExtension);
-            robot.extension.setPower(.1);
+
+        if (gamepad1.y == true) { //Button 1x pressed
+            if (button1yPressed == false) { //We are seeing it pressed for the first time
+                button1yPressed = true;
+                curArmExtension = curArmExtension + 100;
+                robot.extension.setTargetPosition(curArmExtension);
+                robot.extension.setPower(.1);
+            } else {
+                //We already saw this button press and moved the arm extension - do not do it again now
+            }
+        } else {
+            button1yPressed = false; //Button 1x is not pressed any more
         }
+
     }
     //Using the Rev Color Sensor V3 for Distance Sensing using the Infra Red Range Sensor in it
     //  - 5cm to 25cm
@@ -122,170 +164,6 @@ public class LinearTeleop extends LinearOpMode {
         //handXManualProcess();
         //handYManualProcess();
 
-        if(gamepad2.right_bumper){
-            robot.fingers.setPosition(robot.FINGERS_OPEN);
-        }else if(gamepad2.left_bumper){
-            robot.fingers.setPosition(robot.FINGERS_GRAB);
-        }
-    }
-
-    public void OLDservoProcess(){
-        //handXManualProcess();
-        //handYManualProcess();
-        int armPosition = robot.arm.getCurrentPosition();
-        //Always hang the block carrier vertically down
-
-        if (armPosition < -240 && armPosition >= -260 && previousArmPositionRange !=-2){
-            previousArmPositionRange = -2;
-            handYPosition = robot.HANDY_STARTPOSITION+.01;
-            robot.hand_y.setPosition(handYPosition);
-        }
-        if (armPosition < -120 && armPosition >= -130 && previousArmPositionRange !=-1){
-            previousArmPositionRange = -1;
-            handYPosition = robot.HANDY_STARTPOSITION+.01;
-            robot.hand_y.setPosition(handYPosition);
-        }
-        if (armPosition < -5 && armPosition >= 5 && previousArmPositionRange !=0){
-            previousArmPositionRange = 0;
-            handYPosition = robot.HANDY_STARTPOSITION; //.77
-            robot.hand_y.setPosition(handYPosition);
-        }
-        if (armPosition > 120 && armPosition <= 140 && previousArmPositionRange !=1){
-            previousArmPositionRange = 1;
-            handYPosition = robot.HANDY_STARTPOSITION-.02;
-            robot.hand_y.setPosition(handYPosition);
-        }
-        if (armPosition > 240 && armPosition <= 260 && previousArmPositionRange !=2){
-            previousArmPositionRange = 2;
-            handYPosition = robot.HANDY_STARTPOSITION-.04;
-            robot.hand_y.setPosition(handYPosition);
-        }
-        if (armPosition > 365 && armPosition <= 385 && previousArmPositionRange !=3){
-            previousArmPositionRange = 3;//We are free of rollers if block is horizontal
-            handYPosition = robot.HANDY_STARTPOSITION-.06;
-            robot.hand_y.setPosition(handYPosition);
-        }
-        if (armPosition > 450 && armPosition <= 510 && previousArmPositionRange !=4){
-            previousArmPositionRange = 4;
-            handYPosition = robot.HANDY_STARTPOSITION-.08;
-            robot.hand_y.setPosition(handYPosition);
-        }
-        if (armPosition > 665 && armPosition <= 685 && previousArmPositionRange !=5){
-            previousArmPositionRange = 5;
-            handYPosition = robot.HANDY_STARTPOSITION-.10;
-            robot.hand_y.setPosition(handYPosition);
-        }
-        if (armPosition > 790 && armPosition <= 810 && previousArmPositionRange !=6){
-            previousArmPositionRange = 6;
-            handYPosition = robot.HANDY_STARTPOSITION-.25;
-            robot.hand_y.setPosition(handYPosition);
-            if (robot.extension.getCurrentPosition() !=0) {//Only retract if needed - this ensures we do not waste 1 sec if already at 0
-                robot.extension.setTargetPosition(0);
-                robot.extension.setPower(.5);
-                sleep(1000);
-            }
-        }
-        if (armPosition > 800 && armPosition <= 925 && previousArmPositionRange !=8){
-            previousArmPositionRange = 8;
-            handYPosition = .52;
-            robot.hand_y.setPosition(handYPosition);
-        }
-        if (armPosition > 925 && armPosition <= 1050 && previousArmPositionRange !=9){
-            previousArmPositionRange = 9;
-            handYPosition = .52;
-            robot.hand_y.setPosition(handYPosition);
-        }
-        if (armPosition > 1050 && armPosition <= 1175 && previousArmPositionRange !=10){
-            previousArmPositionRange = 10;
-            handYPosition = .52;
-            robot.hand_y.setPosition(handYPosition);
-            robot.extension.setTargetPosition(-1500);
-            robot.extension.setPower(.5);
-        }
-        if (armPosition > 1175 && armPosition <= 1300 && previousArmPositionRange !=11){
-            previousArmPositionRange = 11;
-            handYPosition = .55;
-            robot.hand_y.setPosition(handYPosition);
-        }
-        if (armPosition > 1300 && armPosition <= 1425 && previousArmPositionRange !=12){
-            previousArmPositionRange = 12;
-            handYPosition = .53;
-            robot.hand_y.setPosition(handYPosition);
-        }
-        if (armPosition > 1425 && armPosition <= 1550 && previousArmPositionRange !=13){
-            previousArmPositionRange = 13;
-            handYPosition = .49;
-            robot.hand_y.setPosition(handYPosition);
-        }
-        if (armPosition > 1550 && armPosition <= 1675 && previousArmPositionRange !=14){
-            previousArmPositionRange = 14;
-            handYPosition = .44;
-            robot.hand_y.setPosition(handYPosition);
-        }
-        if (armPosition > 1675 && armPosition <= 1800 && previousArmPositionRange !=15){
-            previousArmPositionRange = 15;
-            handYPosition = .39;
-            robot.hand_y.setPosition(handYPosition);
-        }
-        if (armPosition > 1800 && armPosition <= 1925 && previousArmPositionRange !=16){
-            previousArmPositionRange = 16;
-            handYPosition = .32;
-            robot.hand_y.setPosition(handYPosition);
-        }
-        if (armPosition > 1925 && armPosition <= 2050 && previousArmPositionRange !=17){
-            previousArmPositionRange = 17;
-            handYPosition = .28;
-            robot.hand_y.setPosition(handYPosition);
-        }
-        if (armPosition > 2050 && armPosition <= 2175 && previousArmPositionRange !=18){
-            previousArmPositionRange = 18;
-            handYPosition = .25;
-            robot.hand_y.setPosition(handYPosition);
-        }
-        if (armPosition > 2175 && armPosition <= 2300 && previousArmPositionRange !=19){
-            previousArmPositionRange = 19;
-            handYPosition = .19;
-            robot.hand_y.setPosition(handYPosition);
-        }
-        if (armPosition > 2300 && armPosition <= 2425 && previousArmPositionRange !=20){
-            previousArmPositionRange = 20;
-            handYPosition = .13;
-            robot.hand_y.setPosition(handYPosition);
-        }
-        if (armPosition > 2425 && armPosition <= 2550 && previousArmPositionRange !=21){
-            previousArmPositionRange = 21;
-            handYPosition = .10;
-            robot.hand_y.setPosition(handYPosition);
-        }
-        if (armPosition > 2550 && armPosition <= 2675 && previousArmPositionRange !=22){
-            previousArmPositionRange = 22;
-            handYPosition = .10;
-            robot.hand_y.setPosition(handYPosition);
-        }
-        if (armPosition > 2675 && armPosition <= 2800 && previousArmPositionRange !=23){
-            previousArmPositionRange = 23;
-            handYPosition = .10;
-            robot.hand_y.setPosition(handYPosition);
-        }
-        if (armPosition > 2800 && armPosition <= 2925 && previousArmPositionRange !=24){
-            previousArmPositionRange = 24;
-            handYPosition = .08;
-            robot.hand_y.setPosition(handYPosition);
-        }
-        if (armPosition > 2925 && armPosition <= 3050 && previousArmPositionRange !=25){
-            previousArmPositionRange = 25;
-            handYPosition = .08;
-            robot.hand_y.setPosition(handYPosition);
-        }
-
-        if (robot.logArmPosition){
-            telemetry.addData("\r\nHand Y Position =", handYPosition);
-            telemetry.addData("\r\nArm Position =", armPosition);
-            telemetry.addData("\r\nPrev Arm Position Range =", previousArmPositionRange);
-            telemetry.update();
-        }
-
-        robot.hand_y.setPosition(handYPosition);
         if(gamepad2.right_bumper){
             robot.fingers.setPosition(robot.FINGERS_OPEN);
         }else if(gamepad2.left_bumper){
@@ -432,9 +310,31 @@ public class LinearTeleop extends LinearOpMode {
         }
     }
 
+    public void armProcess2(){
+        if(gamepad2.left_trigger > .5){
+            if (robot.armCurStep > 0){
+                robot.armCurStep--;
+            }
+        }else if (gamepad2.right_trigger > .5){
+            if (robot.armCurStep < 27){
+                robot.armCurStep++;
+            }
+        }
+        if (robot.armCurStep != robot.armPrevStep){
+
+            if (robot.HANDHANGPOSITION[robot.armCurStep][2] != robot.HANDHANGPOSITION[robot.armPrevStep][2]){
+                robot.arm.setTargetPosition((int)robot.HANDHANGPOSITION[robot.armCurStep][2]);
+                robot.arm.setPower(.5);
+            }
+
+            robot.armPrevStep = robot.armCurStep;
+        }
+
+    }
+
     //Press both triggers together to reverse intake
     public void intakeProcessOut(){
-        if (gamepad2.left_trigger > .5 && gamepad2.right_trigger > .5) {
+        if (gamepad1.left_trigger > .5 && gamepad1.right_trigger > .5) {
             intakeOn = false;
             robot.leftIntake.setPower(0);
             robot.rightIntake.setPower(0);
@@ -448,12 +348,12 @@ public class LinearTeleop extends LinearOpMode {
     }
 
     public void intakeProcessIn(){
-        if (gamepad2.left_trigger > .5 && gamepad2.right_trigger > .5) {//ignore when both triggers are pressed. It is handled above.
+        if (gamepad1.left_trigger > .5 && gamepad1.right_trigger > .5) {//ignore when both triggers are pressed. It is handled above.
         }else{
-            if (gamepad2.left_trigger > .5){
+            if (gamepad1.left_trigger > .5){
                 intakeOn = true;
             }
-            if (gamepad2.right_trigger > .5){
+            if (gamepad1.right_trigger > .5){
                 intakeOn = false;
             }
 

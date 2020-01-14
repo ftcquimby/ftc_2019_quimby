@@ -50,14 +50,14 @@ public class Chaboya2019Base {
     public OmegaDriveTrain drivetrain;
 
     //CONSTANTS
-    public double HANDX_MINUS20DEGREES = -.1;
-    public double HANDX_0DEGREES = .12;
-    public double HANDX_90DEGREES = .5;
-    public double FINGERS_GRAB = .29;
-    public double FINGERS_OPEN = .41;
-    public double LEFT_FOUNDATION_GRIPPER_GRAB = .572;
-    public double LEFT_FOUNDATION_GRIPPER_RELEASE = .172;
-    public double RIGHT_FOUNDATION_GRIPPER_GRAB = .82;
+    public double HANDX_MINUS20DEGREES = .2;//This is wrong - fix it
+    public double HANDX_0DEGREES = 0.1;
+    public double HANDX_90DEGREES = .43;
+    public double FINGERS_GRAB = .13;
+    public double FINGERS_OPEN = .21;
+    public double LEFT_FOUNDATION_GRIPPER_GRAB = .2;
+    public double LEFT_FOUNDATION_GRIPPER_RELEASE = .6;
+    public double RIGHT_FOUNDATION_GRIPPER_GRAB = .0;
     public double RIGHT_FOUNDATION_GRIPPER_RELEASE = .4;
 
     //The array tells us how to move the arm and hand so that the hand is always in a hanging position
@@ -67,34 +67,34 @@ public class Chaboya2019Base {
     //This array has [StepNo][HandY Position][Arm Rotation Position][Extension][HandX Position][SleepAfterHandChanges][SleepAfterArmExtChanges]
     double HANDY_STARTPOSITION = .77;
     public double[][] HANDHANGPOSITION = {
-            {0,.79, -125,0,HANDX_0DEGREES,0,0},
-            {1,0.79,-125,0,HANDX_0DEGREES,0,0},
-            {2,0.765,0,0,HANDX_0DEGREES,500,0},
-            {3,0.75,125,0,HANDX_0DEGREES,500,0},
-            {4,0.73,250,0,HANDX_0DEGREES,0,0},
-            {5,0.71,375,0,HANDX_0DEGREES,0,0},
-            {6,0.52,500,0,HANDX_MINUS20DEGREES,0,0},
-            {7,0.52,625,0,HANDX_MINUS20DEGREES,0,0},
-            {8,0.52,750,0,HANDX_MINUS20DEGREES,0,0},
-            {9,0.52,875,0,HANDX_MINUS20DEGREES,0,500},
-            {10,0.52,1000,-1000,HANDX_MINUS20DEGREES,0,500},
-            {11,0.55,1125,-1200,HANDX_MINUS20DEGREES,0,0},
-            {12,0.53,1250,-1300,HANDX_MINUS20DEGREES,0,0},
-            {13,0.49,1375,-1400,HANDX_MINUS20DEGREES,0,0},
-            {14,0.44,1500,-1500,HANDX_MINUS20DEGREES,0,0},
-            {15,0.39,1625,-1600,HANDX_MINUS20DEGREES,0,0},
-            {16,0.32,1750,-1700,HANDX_MINUS20DEGREES,0,0},
-            {17,0.28,1875,-1800,HANDX_MINUS20DEGREES,0,0},
-            {18,0.25,1950,-1900,HANDX_MINUS20DEGREES,0,0},
-            {19,0.19,2025,-2200,HANDX_MINUS20DEGREES,0,0},
-            {20,0.13,2100,-2400,HANDX_MINUS20DEGREES,0,0},
-            {21,0.10,2200,-2600,HANDX_0DEGREES,0,0},
-            {22,0.10,2300,-2800,HANDX_0DEGREES,0,0},
-            {23,0.10,2400,-3000,HANDX_0DEGREES,0,0},
-            {24,0.08,2500,-3200,HANDX_0DEGREES,0,500},
-            {25,0.08,2600,-3400,HANDX_0DEGREES,0,0},
-            {26,0.08,2700,-3600,HANDX_0DEGREES,0,500},
-            {27,0.08,2800,-3800,HANDX_0DEGREES,0,0}
+            {0,.87, -125,0,HANDX_0DEGREES,0,0},
+            {1,0.87,-125,0,HANDX_0DEGREES,0,0},
+            {2,0.87,0,0,HANDX_0DEGREES,500,0},
+            {3,0.85,125,0,HANDX_0DEGREES,500,0},
+            {4,0.83,250,0,HANDX_0DEGREES,0,0},
+            {5,0.81,375,0,HANDX_0DEGREES,0,0},
+            {6,0.79,500,0,HANDX_0DEGREES,0,0},
+            {7,0.74,625,0,HANDX_0DEGREES,0,0},
+            {8,0.52,750,0,HANDX_0DEGREES,0,0},
+            {9,0.52,875,0,HANDX_0DEGREES,0,500},
+            {10,0.52,1000,-1000,HANDX_0DEGREES,0,500},
+            {11,0.55,1125,-1000,HANDX_0DEGREES,0,0},
+            {12,0.53,1250,-1000,HANDX_0DEGREES,0,0},
+            {13,0.49,1375,-1000,HANDX_0DEGREES,0,0},
+            {14,0.44,1500,-1000,HANDX_0DEGREES,0,0},
+            {15,0.39,1625,-1000,HANDX_0DEGREES,0,0},
+            {16,0.39,1750,-1000,HANDX_0DEGREES,0,0},
+            {17,0.39,1875,-1000,HANDX_0DEGREES,0,0},
+            {18,0.37,1950,-1000,HANDX_0DEGREES,0,0},
+            {19,0.35,2025,-1000,HANDX_0DEGREES,0,0},
+            {20,0.33,2100,-1000,HANDX_0DEGREES,0,0},
+            {21,0.31,2200,-1000,HANDX_0DEGREES,0,0},
+            {22,0.29,2300,-1000,HANDX_0DEGREES,0,0},
+            {23,0.27,2400,-1000,HANDX_0DEGREES,0,0},
+            {24,0.25,2550,-1000,HANDX_0DEGREES,0,500},
+            {25,0.23,2675,-1000,HANDX_0DEGREES,0,0},
+            {26,0.21,2800,-1000,HANDX_0DEGREES,0,500},
+            {27,0.21,2900,-1000,HANDX_0DEGREES,0,0}
     };
 
     //3.937-inch diameter wheels, 1 wheel rotations per 1 motor rotation; all Yellow Jacket 19.2:1 motors for wheels (537.6 ticks per rev for 1:1); 27 inch turning diameter
@@ -114,7 +114,7 @@ public class Chaboya2019Base {
     double AUTO_GOLD_RADIUS = 110;
 
     Chaboya2019Base(Telemetry telemetry, HardwareMap hardwareMap) {
-        this.logArmPosition = true;
+        this.logArmPosition = false;
         this.armRunStepMode = true;
         this.telemetry = telemetry;
         this.hardwareMap = hardwareMap;
@@ -138,6 +138,7 @@ public class Chaboya2019Base {
         leftGripper = hardwareMap.get(Servo.class, "left_gripper");
         leftGripper.setDirection(Servo.Direction.REVERSE);
         rightGripper = hardwareMap.get(Servo.class, "right_gripper");
+        rightGripper.setDirection(Servo.Direction.REVERSE);
         leftGripper.setPosition(LEFT_FOUNDATION_GRIPPER_RELEASE);
         rightGripper.setPosition(RIGHT_FOUNDATION_GRIPPER_RELEASE);
 
@@ -175,6 +176,7 @@ public class Chaboya2019Base {
         extension.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);//MadanBellam
         hand_x.setPosition(HANDX_0DEGREES);
         hand_y.setPosition(HANDHANGPOSITION[2][1]);
+        //hand_y.setPosition(.87);
         fingers.setPosition(FINGERS_OPEN);
         extension.setTargetPosition(1);
         extension.setPower(.2);
@@ -185,10 +187,10 @@ public class Chaboya2019Base {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        frontLeft.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        frontRight.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        backLeft.setDirection(DcMotor.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.FORWARD);
+        frontLeft.setDirection(DcMotor.Direction.FORWARD); //When motor turns right wheel goes forward, so we keep it as FORWARD
+        frontRight.setDirection(DcMotor.Direction.REVERSE);//When motor turns right wheel goes forward, so we keep it as FORWARD
+        backLeft.setDirection(DcMotor.Direction.FORWARD); //When motor turns right wheel goes backward, so we change it to REVERSE
+        backRight.setDirection(DcMotor.Direction.FORWARD);//When motor turns right wheel goes backward, so we change it to REVERSE
 
         frontLeft.setPower(0);
         frontRight.setPower(0);
