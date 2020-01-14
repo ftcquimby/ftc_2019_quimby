@@ -7,7 +7,9 @@ public class Avengers extends Movie {
     public Telemetry telemetry;
     public  int numberOfMovies;
 
-    public Avengers(){ numberOfMovies = 4;}
+    public Avengers(){
+     numberOfMovies = 4;
+    }
 
     public Avengers(int numberOfMovies1) {
         numberOfMovies = numberOfMovies1;
@@ -17,15 +19,15 @@ public class Avengers extends Movie {
         numberOfMovies = numberOfMovies1;
         telemetry = telemetry1;
     }
-        public Void printMovie(){
+
+    public void printMovie() {
         int realTime1;
         realTime1 = getTime();
 
-            telemetry.addData("\n\rtime=", realTime1);
-            telemetry.addData("cost=", cost );
-            telemetry.addData("number of movies=", numberOfMovies);
-            telemetry.update();
-
-
+        telemetry.addData("\n\rtime=", realTime1);
+        telemetry.addData("cost=", cost );
+        telemetry.addData("number of movies=", numberOfMovies);
+        telemetry.update();
     }
+
 }

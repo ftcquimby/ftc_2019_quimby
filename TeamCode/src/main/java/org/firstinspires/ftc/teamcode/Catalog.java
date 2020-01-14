@@ -10,21 +10,20 @@ public class Catalog extends LinearOpMode {
         RainJacket rainJacket1 = new RainJacket (telemetry, "M", "blue", 1, "Nike");
         RainJacket rainJacket2 = new RainJacket (telemetry, "XXS", "pink", 10, "Prada");
         RainJacket rainJacket3 = new RainJacket (telemetry, "XL", "orange", 0, "Thrifted");
-        while (opModeIsActive()) {
-            rainJacket1.printJacket();
-            rainJacket2.printJacket();
-            rainJacket3.printJacket();
-        }
-
-        /*CurlyHair curlyHair1 = new CurlyHair (telemetry, 4, "blonde", "crunchy");
+        CurlyHair curlyHair1 = new CurlyHair (telemetry, 4, "blonde", "crunchy");
         CurlyHair curlyHair2 = new CurlyHair (telemetry, 7, "brunette", "smooth");
         CurlyHair curlyHair3 = new CurlyHair (telemetry, 2, "magenta", "course");
         waitForStart();
         while (opModeIsActive()) {
+            rainJacket1.printJacket();
+            rainJacket2.printJacket();
+            rainJacket3.printJacket();
             curlyHair1.printHair();
             curlyHair2.printHair();
             curlyHair3.printHair();
         }
+
+        /*
         PineTree pineTree2 = new PineTree(telemetry, 8, "green", "aleppo");
         PineTree pineTree3 = new PineTree(telemetry, 7, "purple", "pinus");
         Element element1 = new Element(telemetry, "green", 2003, 200000,2);

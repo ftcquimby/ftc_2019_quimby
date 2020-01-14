@@ -6,17 +6,21 @@ public class Movie {
 
     public Movie(){
         time = 2;
-        cost= 10;
+        cost = 10;
     }
-    public Movie (int time1) {time = time1};
-    public Movie (int time1, int cost1){
+
+    public Movie(int time1){
+        time = time1;
+    };
+
+    public Movie(int time1, int cost1){
         time1= time;
         cost1 =cost;
-        }
-        public int getTime(){
+    }
+
+    public int getTime(){
         int realTime = time + 15;
         return realTime;
-        }
-
+    }
 
 }
