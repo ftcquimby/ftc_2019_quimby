@@ -8,9 +8,6 @@ public class Tree {
         height = 7;
         color = "green";
     }
-    public Tree(int height1){
-        height = height1;
-    }
     public Tree(int height1, String color1){
        height = height1;
        color = color1;
