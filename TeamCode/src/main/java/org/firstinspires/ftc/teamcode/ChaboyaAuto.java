@@ -25,6 +25,8 @@ public class ChaboyaAuto extends LinearOpMode {
 
     private TFObjectDetector tfod;
 
+    public int ourSkystone = 0;
+
     @Override
     public void runOpMode() {
         initializeVuforia();
@@ -42,15 +44,38 @@ public class ChaboyaAuto extends LinearOpMode {
                     // the last time that call was made.
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                     if (updatedRecognitions != null) {
-                        telemetry.addData("# Object Detected", updatedRecognitions.size());
+                        //telemetry.addData("# Object Detected", updatedRecognitions.size());
                         // step through the list of recognitions and display boundary info.
                         int i = 0;
                         for (Recognition recognition : updatedRecognitions) {
-                            telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-                            telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
+                            if (recognition.getLabel().equals(LABEL_SECOND_ELEMENT)) {
+
+                                if ((recognition.getRight() - recognition.getLeft()) < 270) {
+
+                                    if ((recognition.getLeft() > 250) && (recognition.getLeft() < 450)) {
+                                        ourSkystone = 1;
+                                    }
+                                    if ((recognition.getLeft() > 100) && (recognition.getLeft() <= 250)) {
+                                        ourSkystone = 2;
+                                    }
+                                    if ((recognition.getLeft() > 0) && (recognition.getLeft() <= 100)) {
+                                        ourSkystone = 3;
+                                    }
+
+                                }
+                                telemetry.addData("Found Skystone: ", ourSkystone);
+                                telemetry.addData("\n\rLeft Value=", recognition.getLeft());
+                                telemetry.addData("\n\rRight Value=", recognition.getRight());
+
+                            }
+
+                           /* telemetry.addData(String.format("  left,top (%  d)", i), "%.03f , %.03f",
                                     recognition.getLeft(), recognition.getTop());
                             telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
                                     recognition.getRight(), recognition.getBottom());
+
+                            */
+
                         }
                         telemetry.update();
                     }
