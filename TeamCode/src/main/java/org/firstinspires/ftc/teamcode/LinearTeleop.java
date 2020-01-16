@@ -11,21 +11,33 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.Locale;
 
-@TeleOp(name = "LinearTeleop", group = "prototype")
+@TeleOp(name = "1-QuimbyManual")
 public class LinearTeleop extends LinearOpMode {
     private OmegaBot robot;
     private ElapsedTime runtime;
     double maxSpeed = 1;
     boolean intakeOn = false;
+    boolean ejectOn = false;
     private int armPosition = 0;
     private double handYPosition = .77;//hand_y position
     private int previousArmPositionRange = 0;
     private int curArmExtension = 0;
     private boolean button1xPressed = false;
     private boolean button1yPressed = false;
+    private double curHandXPosition = 0;
+    private double curHandYPosition = 0;
+    private boolean button1aPressed = false;
+    private boolean button1bPressed = false;
+
+    private boolean dPadLeftPressed = false;
+    private boolean dPadRightPressed = false;
+    private boolean dPadUpPressed = false;
+    private boolean dPadDownPressed = false;
 
     private boolean brickFound1 = false;
     private boolean brickFound2 = false;
+
+    private boolean noStone = true;
 
     public void runOpMode(){
         robot = new OmegaBot(telemetry,hardwareMap);
@@ -39,13 +51,13 @@ public class LinearTeleop extends LinearOpMode {
 
         robot.extension.setMode(DcMotor.RunMode.RUN_USING_ENCODER);//MadanBellam
         robot.extension.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);//MadanBellam
-        robot.extension.setTargetPosition((int)robot.HANDHANGPOSITION[robot.armCurStep][3]);
+        robot.extension.setTargetPosition(0);
         robot.extension.setPower(.2);
         robot.extension.setMode(DcMotor.RunMode.RUN_TO_POSITION);//MadanBellam
 
         robot.hand_x.setPosition(robot.HANDX_0DEGREES);
-        robot.hand_y.setPosition(robot.HANDHANGPOSITION[robot.armCurStep][1]);
-        robot.fingers.setPosition(robot.FINGERS_OPEN);
+        robot.hand_y.setPosition(.85);
+        robot.fingers.setPosition(robot.FINGERS_GRAB);
         sleep((long)robot.HANDHANGPOSITION[robot.armCurStep][5]);
 
         waitForStart();
@@ -56,21 +68,414 @@ public class LinearTeleop extends LinearOpMode {
         //robot.rightIntake.setPower(-1);
 
         while(opModeIsActive()){
-            //processExtension();
-            stoneFoundProcess();
-            drivetrainProcess();
-            armProcess();
-            armProcess2();
-            extensionProcess();
-            servoProcess();
-            intakeProcessIn();
-            intakeProcessOut();
-            foundationGrippers();
+            //testMotors();
 
-            //telemetry.addData("\n\rhand_x position: ", robot.hand_x.getPosition());
-            //telemetry.addData("\n\rleft Foundation Gripper position: ", robot.leftGripper.getPosition());
-            //telemetry.addData("\n\rright Foundation Gripper position: ", robot.rightGripper.getPosition());
+
+            //stoneFoundProcess();
+            drivetrainProcess();
+            //intakeProcessStop();
+            //intakeProcessInOut();
+            //foundationGrippers();
+
+
+            pickupOnA();
+            pickupOnB();
+            pickupOnX();//Going away leftwards from the robot
+            pickupOnY();//Going away rightwards from the robot
+            armToHome(true);
+            grabRelease();
+            extensionProcess();
+            armProcess3();
+            handXManualProcess();
+            handYManualProcess();
+
+        }
+    }
+
+    public void pickupOnA(){
+
+        if (gamepad2.a == true){
+            //rotate arm up to get out of the way of the front motors
+            robot.arm.setTargetPosition(300);
+            robot.arm.setPower(.5);
+            sleep(500);
+
+            //extend arm out
+            robot.extension.setTargetPosition(-2800);
+            robot.extension.setPower(.5);
+            sleep(1400);
+
+            robot.hand_y.setPosition(.75);
+            robot.fingers.setPosition(robot.FINGERS_OPEN);
+            sleep(500);
+
+            //rotate arm to be ready for pickup, Pickup happens at 200
+            robot.arm.setTargetPosition(-100);
+            robot.arm.setPower(.5);
+            sleep(1000);
+
+            robot.hand_y.setPosition(.75);
+            robot.fingers.setPosition(robot.FINGERS_GRAB);
+            sleep(1000);
+
+            robot.arm.setTargetPosition(0);
+            robot.arm.setPower(.5);
+            sleep(500);
+
+        }
+    }
+
+    public void pickupOnB(){
+
+        if (gamepad2.b == true){
+            //rotate arm up to get out of the way of the front motors
+            robot.arm.setTargetPosition(300);
+            robot.arm.setPower(.5);
+            robot.hand_x.setPosition(robot.HANDX_90DEGREES);
+            sleep(500);
+
+            //extend arm out
+            robot.extension.setTargetPosition(-2800);
+            robot.extension.setPower(.8);
+            sleep(1400);
+
+            robot.hand_y.setPosition(.75);
+            robot.fingers.setPosition(robot.FINGERS_OPEN);
+            sleep(500);
+
+            robot.arm.setTargetPosition(100);
+            robot.arm.setPower(.5);
+            sleep(1000);
+
+            robot.arm.setTargetPosition(-100);
+            robot.arm.setPower(.5);
+            sleep(1000);
+
+            robot.hand_y.setPosition(.75);
+            robot.fingers.setPosition(robot.FINGERS_GRAB);
+            sleep(1000);
+
+            robot.arm.setTargetPosition(0);
+            robot.arm.setPower(.5);
+            sleep(500);
+
+            robot.hand_x.setPosition(robot.HANDX_0DEGREES);
+
+
+        }
+    }
+
+    public void pickupOnX(){
+
+        if (gamepad2.x == true){
+            //rotate arm up to get out of the way of the front motors
+            robot.arm.setTargetPosition(300);
+            robot.arm.setPower(.5);
+            robot.hand_x.setPosition(robot.HANDX_45DEGREES);
+            sleep(500);
+
+            //extend arm out
+            robot.extension.setTargetPosition(-2700);
+            robot.extension.setPower(.8);
+            sleep(1400);
+
+            robot.hand_y.setPosition(.75);
+            robot.fingers.setPosition(robot.FINGERS_OPEN);
+            sleep(500);
+
+            robot.arm.setTargetPosition(100);
+            robot.arm.setPower(.5);
+            sleep(1000);
+
+            robot.arm.setTargetPosition(-100);
+            robot.arm.setPower(.5);
+            sleep(1000);
+
+            robot.hand_y.setPosition(.75);
+            robot.fingers.setPosition(robot.FINGERS_GRAB);
+            sleep(1000);
+
+            robot.arm.setTargetPosition(0);
+            robot.arm.setPower(.5);
+            sleep(500);
+
+            robot.hand_x.setPosition(robot.HANDX_0DEGREES);
+
+        }
+    }
+
+    public void pickupOnY(){
+
+        if (gamepad2.y == true){
+            //rotate arm up to get out of the way of the front motors
+            robot.arm.setTargetPosition(300);
+            robot.arm.setPower(.5);
+            sleep(500);
+
+            //extend arm out
+            robot.extension.setTargetPosition(-2850);
+            robot.extension.setPower(.8);
+            sleep(1400);
+
+            robot.hand_y.setPosition(.75);
+            robot.hand_x.setPosition(robot.HANDX_135DEGREES);
+            robot.fingers.setPosition(robot.FINGERS_OPEN);
+            sleep(500);
+
+            robot.arm.setTargetPosition(100);
+            robot.arm.setPower(.5);
+            sleep(1000);
+
+            robot.arm.setTargetPosition(-100);
+            robot.arm.setPower(.5);
+            sleep(1000);
+
+            robot.hand_y.setPosition(.75);
+            robot.fingers.setPosition(robot.FINGERS_GRAB);
+            sleep(1000);
+
+            //extend arm out
+            robot.extension.setTargetPosition(-3200);
+            robot.extension.setPower(.8);
+            sleep(1000);
+
+            robot.arm.setTargetPosition(0);
+            robot.arm.setPower(.5);
+            sleep(1000);
+
+            robot.hand_x.setPosition(robot.HANDX_0DEGREES);
+
+
+        }
+    }
+
+    //If noStone = true, it will go back all the way inside the robot to the starting position
+    //If noStone = false, it assumes it has a stone in its grasp and will stay extended out in front, holding the stone, but in a
+    //                      position where it can go under the bridge.
+    public void armToHome(boolean noStone){
+        if (gamepad2.back == true){
+            //rotate arm up to get out of the way of the front motors
+            robot.arm.setTargetPosition(900);
+            robot.arm.setPower(.5);
+            sleep(500);
+
+            robot.hand_x.setPosition(robot.HANDX_0DEGREES);
+            robot.hand_y.setPosition(.85);
+            robot.fingers.setPosition(robot.FINGERS_GRAB);//Close fingers
+
+            //withdraw arm in
+            robot.extension.setTargetPosition(0);
+            robot.extension.setPower(.5);
+            sleep(1000);
+
+            //Rotate back inside the robot
+            robot.arm.setTargetPosition(0);
+            robot.arm.setPower(.5);
+
+        }
+    }
+
+
+    public void extensionProcess(){
+        int ePosition = robot.extension.getCurrentPosition();
+        if (robot.logArmPosition){
+            telemetry.addData("\r\nExtension Encoder Position: ", ePosition);
+            telemetry.update();
+        }
+
+        if(gamepad2.right_stick_y < -.5){ //Extends the Arm
+            //robot.arm.setPower(.75);
+            //moveArm(-30);
+            if (ePosition >= -3800) { //Never go below -1000
+                if (ePosition <= -3720) {
+                    ePosition = -3800;
+                }
+                else {
+                    ePosition = ePosition - 80;
+                }
+                robot.extension.setTargetPosition(ePosition);
+                robot.extension.setPower(.5);
+            }
+            ePosition = robot.extension.getCurrentPosition();
+            //telemetry.addData("Extension Encoder Position Y", ePosition);
             //telemetry.update();
+        }else if (gamepad2.right_stick_y > .5){ //Pulls in the Arm
+            //moveArm(30);
+            //robot.arm.setPower(-.75);
+            if (ePosition <= 0) { //Never go above 0
+                if (ePosition >= -80) {
+                    ePosition = 0;
+                }
+                else {
+                    ePosition = ePosition + 80;
+                }
+                robot.extension.setTargetPosition(ePosition);
+                robot.extension.setPower(.5);
+            }
+            ePosition = robot.extension.getCurrentPosition();
+            //telemetry.addData("Extension Encoder Position X", ePosition);
+            //telemetry.update();
+        }
+    }
+
+    public void armProcess3(){
+        int ePosition = robot.arm.getCurrentPosition();
+        int armStepNow = 0;
+        boolean done = false;
+        boolean userUsingArm = false;
+
+        if(gamepad2.left_stick_y < -.5){ //Rotate the Arm
+            userUsingArm = true;
+            if (ePosition < 3125) { //Never go above this number
+                if (ePosition >= 3000) {
+                    ePosition = 3125;
+                }
+                else {
+                    ePosition = ePosition + 125;
+                }
+                robot.arm.setTargetPosition(ePosition);
+                robot.arm.setPower(.5);
+            }
+        }else if (gamepad2.left_stick_y > .5){
+            userUsingArm = true;
+            if (ePosition > -100) { //Never go below -100
+                if (ePosition <= 25) {
+                    ePosition = -100;
+                }
+                else {
+                    ePosition = ePosition - 125;
+                }
+                robot.arm.setTargetPosition(ePosition);
+                robot.arm.setPower(.5);
+            }
+        }
+
+        //Update the Arm Hang Position based on the arm rotation
+        //Figure out which arm step we are on now
+        if (userUsingArm) {
+            ePosition = robot.arm.getCurrentPosition();
+            while (!done) {
+                if ((ePosition >= (robot.HANDHANGPOSITION[armStepNow][2] - 10)) && (ePosition <= (robot.HANDHANGPOSITION[armStepNow][2] + 10))) {
+                    done = true;
+                } else {
+                    armStepNow++;
+                    if (armStepNow > 27) {
+                        done = true;
+                    }
+                }
+            }
+            if (armStepNow <= 27) {
+                robot.hand_y.setPosition(robot.HANDHANGPOSITION[armStepNow][1]);
+            }
+        }
+
+    }
+
+
+    public void handXManualProcess(){
+        double curHandXPosition;
+        curHandXPosition = robot.hand_x.getPosition();
+        if (gamepad2.dpad_left){ //DPad Left pressed
+            if (dPadLeftPressed == false) {
+                dPadLeftPressed = true;
+                if (curHandXPosition <= .95) {
+                    robot.hand_x.setPosition(curHandXPosition + .05);
+                }
+            } else {
+                //We already saw this button press - do not do it again now
+            }
+        } else {
+            dPadLeftPressed = false; //button is not pressed any more
+        }
+
+        if (gamepad2.dpad_right){ //DPad Left pressed
+            if (dPadRightPressed == false) {
+                dPadRightPressed = true;
+                if (curHandXPosition >= .05) {
+                    robot.hand_x.setPosition(curHandXPosition - .05);
+                }
+            } else {
+                //We already saw this button press - do not do it again now
+            }
+        } else {
+            dPadRightPressed = false; //button is not pressed any more
+        }
+    }
+
+    public void handYManualProcess(){
+        double curHandYPosition;
+        curHandYPosition = robot.hand_y.getPosition();
+
+        if (gamepad2.dpad_up){ //DPad Up pressed
+            if (dPadUpPressed == false) {
+                dPadUpPressed = true;
+                if (curHandYPosition <= .95) {
+                    robot.hand_x.setPosition(curHandYPosition + .05);
+                }
+            } else {
+                //We already saw this button press - do not do it again now
+            }
+        } else {
+            dPadUpPressed = false; //button is not pressed any more
+        }
+
+        if (gamepad2.dpad_down){ //DPad Down pressed
+            if (dPadDownPressed == false) {
+                dPadDownPressed = true;
+                if (curHandYPosition >= .05) {
+                    robot.hand_x.setPosition(curHandYPosition - .05);
+                }
+            } else {
+                //We already saw this button press - do not do it again now
+            }
+        } else {
+            dPadDownPressed = false; //button is not pressed any more
+        }
+    }
+
+    //Test Motors
+    public void testMotors(){
+        if (gamepad2.a == true){
+            robot.hand_x.setPosition(0);
+
+        }
+        if (gamepad2.b == true){
+            robot.hand_x.setPosition(1);
+
+        }
+
+
+        if (gamepad1.a == true){
+            robot.frontLeft.setPower(.2);
+            robot.frontRight.setPower(0);
+            robot.backLeft.setPower(0);
+            robot.backRight.setPower(0);
+        }else{
+            robot.frontLeft.setPower(0);
+        }
+        if (gamepad1.b == true){
+            robot.frontLeft.setPower(0);
+            robot.frontRight.setPower(.2);
+            robot.backLeft.setPower(0);
+            robot.backRight.setPower(0);
+        }else{
+            robot.frontRight.setPower(0);
+        }
+        if (gamepad1.x == true){
+            robot.frontLeft.setPower(0);
+            robot.frontRight.setPower(0);
+            robot.backLeft.setPower(.2);
+            robot.backRight.setPower(0);
+        }else{
+            robot.backLeft.setPower(0);
+        }
+        if (gamepad1.y == true){
+            robot.frontLeft.setPower(0);
+            robot.frontRight.setPower(0);
+            robot.backLeft.setPower(0);
+            robot.backRight.setPower(0.2);
+        }else{
+            robot.backRight.setPower(0);
         }
     }
 
@@ -142,27 +547,7 @@ public class LinearTeleop extends LinearOpMode {
     }
 
 
-    public void handXManualProcess(){
-        if (gamepad1.x){
-            robot.hand_x.setPosition(robot.HANDX_0DEGREES);
-        }else if (gamepad1.y) {
-            robot.hand_x.setPosition(robot.HANDX_90DEGREES);
-        }
-    }
-
-    public void handYManualProcess(){
-        if (gamepad1.a){
-            robot.hand_y.setPosition(.77);
-        }else if (gamepad1.b) {
-            robot.hand_y.setPosition(.55);
-        }
-        telemetry.addData("\r\nHand Y Position =", handYPosition);
-        telemetry.update();
-    }
-
-    public void servoProcess(){
-        //handXManualProcess();
-        //handYManualProcess();
+    public void grabRelease(){
 
         if(gamepad2.right_bumper){
             robot.fingers.setPosition(robot.FINGERS_OPEN);
@@ -268,54 +653,13 @@ public class LinearTeleop extends LinearOpMode {
         }
     }
 
-    public void extensionProcess(){
-        int ePosition = robot.extension.getCurrentPosition();
-        if (robot.logArmPosition){
-            telemetry.addData("\r\nExtension Encoder Position: ", ePosition);
-            telemetry.update();
-        }
-
-        if(gamepad2.y){ //Extends the Arm
-            //robot.arm.setPower(.75);
-            //moveArm(-30);
-            if (ePosition >= -3800) { //Never go below -1000
-                if (ePosition <= -3720) {
-                    ePosition = -3800;
-                }
-                else {
-                    ePosition = ePosition - 80;
-                }
-                robot.extension.setTargetPosition(ePosition);
-                robot.extension.setPower(.5);
-            }
-            ePosition = robot.extension.getCurrentPosition();
-            //telemetry.addData("Extension Encoder Position Y", ePosition);
-            //telemetry.update();
-        }else if (gamepad2.x){ //Pulls in the Arm
-            //moveArm(30);
-            //robot.arm.setPower(-.75);
-            if (ePosition <= 0) { //Never go above 0
-                if (ePosition >= -80) {
-                    ePosition = 0;
-                }
-                else {
-                    ePosition = ePosition + 80;
-                }
-                robot.extension.setTargetPosition(ePosition);
-                robot.extension.setPower(.5);
-            }
-            ePosition = robot.extension.getCurrentPosition();
-            //telemetry.addData("Extension Encoder Position X", ePosition);
-            //telemetry.update();
-        }
-    }
 
     public void armProcess2(){
-        if(gamepad2.left_trigger > .5){
+        if(gamepad2.left_stick_y < -.5){
             if (robot.armCurStep > 0){
                 robot.armCurStep--;
             }
-        }else if (gamepad2.right_trigger > .5){
+        }else if (gamepad2.left_stick_y > .5){
             if (robot.armCurStep < 27){
                 robot.armCurStep++;
             }
@@ -332,79 +676,45 @@ public class LinearTeleop extends LinearOpMode {
 
     }
 
-    //Press both triggers together to reverse intake
-    public void intakeProcessOut(){
+    public void intakeProcessStop(){
         if (gamepad1.left_trigger > .5 && gamepad1.right_trigger > .5) {
             intakeOn = false;
-            robot.leftIntake.setPower(0);
-            robot.rightIntake.setPower(0);
-            sleep(1000);//wait for intake to stop
-            robot.leftIntake.setPower(.2); //reverse the intake
-            robot.rightIntake.setPower(-.2);
-            sleep(2000);//wait for the block to be kicked out
+            ejectOn = false;
             robot.leftIntake.setPower(0); //stop
             robot.rightIntake.setPower(0);
         }
     }
 
-    public void intakeProcessIn(){
+    public void intakeProcessInOut(){
         if (gamepad1.left_trigger > .5 && gamepad1.right_trigger > .5) {//ignore when both triggers are pressed. It is handled above.
         }else{
             if (gamepad1.left_trigger > .5){
                 intakeOn = true;
+                ejectOn = false;
             }
             if (gamepad1.right_trigger > .5){
                 intakeOn = false;
+                ejectOn = true;
             }
 
             if (intakeOn == true){
                 robot.leftIntake.setPower(-.2);
                 robot.rightIntake.setPower(.2);
             }
-            else {
+            if (ejectOn == true) {
+                ejectOn = false;
                 robot.leftIntake.setPower(0);
                 robot.rightIntake.setPower(0);
-            }
-        }
-    }
-
-    public void intakeProcessOutOld(){
-        if(gamepad2.right_trigger > .5) {
-            if (gamepad2.left_trigger > .5 && gamepad2.right_trigger > .5){
-                robot.leftIntake.setPower(0);
-                robot.rightIntake.setPower(0);
-            }
-            else {
-                robot.leftIntake.setPower(.2);
+                sleep(1000);//wait for intake to stop
+                robot.leftIntake.setPower(.2); //reverse the intake
                 robot.rightIntake.setPower(-.2);
-            }
-
-        }
-
-        else {
-            robot.leftIntake.setPower(0);
-            robot.rightIntake.setPower(0);
-        }
-    }
-    public void intakeProcessInOld(){
-        if (gamepad2.left_trigger > .5){
-            if (gamepad2.left_trigger > .5 && gamepad2.right_trigger > .5){
+                sleep(1500);//wait for the block to be kicked out
                 robot.leftIntake.setPower(0);
                 robot.rightIntake.setPower(0);
             }
-            else {
-                robot.leftIntake.setPower(-.2);
-                robot.rightIntake.setPower(.2);
-            }
-
         }
-
-        else {
-            robot.leftIntake.setPower(0);
-            robot.rightIntake.setPower(0);
-        }
-
     }
+
 
     public void drivetrainProcess(){
         double forward = gamepad1.left_stick_y;

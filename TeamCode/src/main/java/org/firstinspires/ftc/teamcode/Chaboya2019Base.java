@@ -51,8 +51,11 @@ public class Chaboya2019Base {
 
     //CONSTANTS
     public double HANDX_MINUS20DEGREES = .2;//This is wrong - fix it
-    public double HANDX_0DEGREES = 0.1;
-    public double HANDX_90DEGREES = .43;
+    public double HANDX_0DEGREES = 0.13;
+    public double HANDX_45DEGREES = .30;
+    public double HANDX_90DEGREES = .46;
+    public double HANDX_135DEGREES = .66;
+
     public double FINGERS_GRAB = .13;
     public double FINGERS_OPEN = .21;
     public double LEFT_FOUNDATION_GRIPPER_GRAB = .2;
@@ -105,7 +108,7 @@ public class Chaboya2019Base {
     final double turnTimeLimit = 2.5;
     final double driveTimeLimitPer1Foot = 0.80; //1.5 sec per 12 inches
     Orientation lastAngles = new Orientation();
-    BNO055IMU imu;
+//    BNO055IMU imu;
     public OmegaPID turnPID;
     public OmegaPID drivePID;
     double globalAngle, power = .30, correction;
@@ -149,7 +152,7 @@ public class Chaboya2019Base {
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
         // and named "imu1".
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+/*        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
         parameters.mode = BNO055IMU.SensorMode.IMU;
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -158,7 +161,7 @@ public class Chaboya2019Base {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
 
         imu.initialize(parameters);
-
+*/
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -166,21 +169,6 @@ public class Chaboya2019Base {
 
         armCurStep = 2;
         armPrevStep = 2;
-        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);//MadanBellam
-        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);//MadanBellam
-        arm.setTargetPosition(1);
-        arm.setPower(.2);
-        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);//MadanBellam
-
-        extension.setMode(DcMotor.RunMode.RUN_USING_ENCODER);//MadanBellam
-        extension.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);//MadanBellam
-        hand_x.setPosition(HANDX_0DEGREES);
-        hand_y.setPosition(HANDHANGPOSITION[2][1]);
-        //hand_y.setPosition(.87);
-        fingers.setPosition(FINGERS_OPEN);
-        extension.setTargetPosition(1);
-        extension.setPower(.2);
-        extension.setMode(DcMotor.RunMode.RUN_TO_POSITION);//MadanBellam
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -188,9 +176,9 @@ public class Chaboya2019Base {
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         frontLeft.setDirection(DcMotor.Direction.FORWARD); //When motor turns right wheel goes forward, so we keep it as FORWARD
-        frontRight.setDirection(DcMotor.Direction.REVERSE);//When motor turns right wheel goes forward, so we keep it as FORWARD
+        frontRight.setDirection(DcMotor.Direction.FORWARD);//When motor turns right wheel goes forward, so we keep it as FORWARD
         backLeft.setDirection(DcMotor.Direction.FORWARD); //When motor turns right wheel goes backward, so we change it to REVERSE
-        backRight.setDirection(DcMotor.Direction.FORWARD);//When motor turns right wheel goes backward, so we change it to REVERSE
+        backRight.setDirection(DcMotor.Direction.REVERSE);//When motor turns right wheel goes backward, so we change it to REVERSE
 
         frontLeft.setPower(0);
         frontRight.setPower(0);
@@ -226,6 +214,8 @@ public class Chaboya2019Base {
      * @param degrees  desired angle in deg
      * @param velocity max velocity
      */
+
+    /*
     public void turnUsingPIDVoltage(double degrees, double velocity) {
         DcMotor.RunMode original = frontLeft.getMode(); //assume all drive motors r the same runmode
         drivetrain.setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -248,13 +238,13 @@ public class Chaboya2019Base {
         drivetrain.setVelocity(0);
         drivetrain.setRunMode(original);
     }
-
+*/
 
     /**
      * Resets the cumulative angle tracking to zero.
      */
     public void resetAngle() {
-        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        //lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         globalAngle = 0;
     }
@@ -264,11 +254,14 @@ public class Chaboya2019Base {
      *
      * @return Angle in degrees. + = left, - = right.
      */
+
+    /*
     public double getAngle() {
         // We experimentally determined the Z axis is the axis we want to use for heading angle.
         // We have to process the angle because the imu works in euler angles so the Z axis is
         // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
         // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
+
 
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
@@ -285,6 +278,8 @@ public class Chaboya2019Base {
 
         return globalAngle;
     }
+    */
+
 
 //    /**
 //     * Get the real heading {0, 360}

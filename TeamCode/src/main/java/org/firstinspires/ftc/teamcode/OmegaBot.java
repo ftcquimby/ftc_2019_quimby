@@ -55,9 +55,11 @@ public class OmegaBot {
     //CONSTANTS
     public double HANDX_MINUS20DEGREES = .24;
     public double HANDX_0DEGREES = .15;
-    public double HANDX_90DEGREES = .55;
+    public double HANDX_45DEGREES = .31;
+    public double HANDX_90DEGREES = .47;
+    public double HANDX_135DEGREES = .67;
     public double FINGERS_GRAB = .29;
-    public double FINGERS_OPEN = .43;
+    public double FINGERS_OPEN = .6; //.43
     public double LEFT_FOUNDATION_GRIPPER_GRAB = .572;
     public double LEFT_FOUNDATION_GRIPPER_RELEASE = .172;
     public double RIGHT_FOUNDATION_GRIPPER_GRAB = .82;
@@ -75,12 +77,12 @@ public class OmegaBot {
             {3,0.75,125,-200,HANDX_0DEGREES,500,0},
             {4,0.74,250,-200,HANDX_0DEGREES,0,0},
             {5,0.72,375,-200,HANDX_0DEGREES,0,0},
-            {6,0.72,500,-200,HANDX_0DEGREES,0,0},
-            {7,0.72,625,-200,HANDX_0DEGREES,0,0},
-            {8,0.52,750,-200,HANDX_0DEGREES,0,0},
-            {9,0.52,875,-200,HANDX_0DEGREES,0,500},
-            {10,0.52,1000,-1350,HANDX_0DEGREES,0,500},
-            {11,0.55,1125,-1350,HANDX_0DEGREES,0,0},
+            {6,0.70,500,-200,HANDX_0DEGREES,0,0},
+            {7,0.68,625,-200,HANDX_0DEGREES,0,0},
+            {8,0.66,750,-200,HANDX_0DEGREES,0,0},
+            {9,0.64,875,-200,HANDX_0DEGREES,0,500},
+            {10,0.61,1000,-1350,HANDX_0DEGREES,0,500},
+            {11,0.57,1125,-1350,HANDX_0DEGREES,0,0},
             {12,0.53,1250,-1350,HANDX_0DEGREES,0,0},
             {13,0.49,1375,-1350,HANDX_0DEGREES,0,0},
             {14,0.44,1500,-1600,HANDX_0DEGREES,0,0},
