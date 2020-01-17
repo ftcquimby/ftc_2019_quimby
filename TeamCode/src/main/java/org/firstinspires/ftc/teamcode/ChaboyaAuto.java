@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -14,6 +15,7 @@ import java.util.List;
 @TeleOp(name = "ChaboyaAuto")
 
 public class ChaboyaAuto extends LinearOpMode {
+    private Chaboya2019Base myRobot;
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Stone";
     private static final String LABEL_SECOND_ELEMENT = "Skystone";
@@ -29,6 +31,16 @@ public class ChaboyaAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        myRobot = new Chaboya2019Base(telemetry, hardwareMap);
+        boolean finishedAuto = false;
+
+
+        myRobot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);//MadanBellam
+        myRobot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);//MadanBellam
+        myRobot.arm.setTargetPosition(0);
+        myRobot.arm.setPower(.2);
+        myRobot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);//MadanBellam
+
         initializeVuforia();
         initializeTfod();
 
@@ -38,6 +50,11 @@ public class ChaboyaAuto extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
+
+            myRobot.arm.setTargetPosition(200);
+            myRobot.arm.setPower(.5);
+            sleep(500);
+
             while (opModeIsActive()) {
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
@@ -53,13 +70,16 @@ public class ChaboyaAuto extends LinearOpMode {
                                 if ((recognition.getRight() - recognition.getLeft()) < 270) {
 
                                     if ((recognition.getLeft() > 250) && (recognition.getLeft() < 450)) {
-                                        ourSkystone = 1;
+                                        ourSkystone = 3;
+
                                     }
                                     if ((recognition.getLeft() > 100) && (recognition.getLeft() <= 250)) {
                                         ourSkystone = 2;
+
                                     }
                                     if ((recognition.getLeft() > 0) && (recognition.getLeft() <= 100)) {
-                                        ourSkystone = 3;
+                                        ourSkystone = 1;
+
                                     }
 
                                 }
@@ -80,7 +100,139 @@ public class ChaboyaAuto extends LinearOpMode {
                         telemetry.update();
                     }
                 }
+
+                if ((finishedAuto == false) && (ourSkystone > 0)) {
+                    finishedAuto = true;
+
+                    if (ourSkystone == 3) {
+                        myRobot.frontLeft.setPower(-0.2);
+                        myRobot.frontRight.setPower(-0.2);
+                        myRobot.backLeft.setPower(-0.2);
+                        myRobot.backRight.setPower(-0.2);
+                        sleep(4000);
+                        myRobot.frontLeft.setPower(0);
+                        myRobot.frontRight.setPower(0);
+                        myRobot.backLeft.setPower(0);
+                        myRobot.backRight.setPower(0);
+
+                        myRobot.frontLeft.setPower(-0.2);
+                        myRobot.frontRight.setPower(+0.2);
+                        myRobot.backLeft.setPower(+0.2);
+                        myRobot.backRight.setPower(-0.2);
+                        sleep(1000);
+                        myRobot.frontLeft.setPower(0);
+                        myRobot.frontRight.setPower(0);
+                        myRobot.backLeft.setPower(0);
+                        myRobot.backRight.setPower(0);
+
+                        sleep(10000);
+
+                        myRobot.frontLeft.setPower(+0.2);
+                        myRobot.frontRight.setPower(-0.2);
+                        myRobot.backLeft.setPower(-0.2);
+                        myRobot.backRight.setPower(+0.2);
+                        sleep(1000);
+                        myRobot.frontLeft.setPower(0);
+                        myRobot.frontRight.setPower(0);
+                        myRobot.backLeft.setPower(0);
+                        myRobot.backRight.setPower(0);
+
+                        myRobot.frontLeft.setPower(0.2);
+                        myRobot.frontRight.setPower(0.2);
+                        myRobot.backLeft.setPower(0.2);
+                        myRobot.backRight.setPower(0.2);
+                        sleep(4000);
+                        myRobot.frontLeft.setPower(0);
+                        myRobot.frontRight.setPower(0);
+                        myRobot.backLeft.setPower(0);
+                        myRobot.backRight.setPower(0);
+
+                        myRobot.arm.setTargetPosition(0);
+                        myRobot.arm.setPower(0);
+                        sleep(500);
+                    }
+
+                    if (ourSkystone == 2) {
+                        myRobot.frontLeft.setPower(-0.2);
+                        myRobot.frontRight.setPower(-0.2);
+                        myRobot.backLeft.setPower(-0.2);
+                        myRobot.backRight.setPower(-0.2);
+                        sleep(4000);
+                        myRobot.frontLeft.setPower(0);
+                        myRobot.frontRight.setPower(0);
+                        myRobot.backLeft.setPower(0);
+                        myRobot.backRight.setPower(0);
+
+                        sleep(10000);
+
+                        myRobot.frontLeft.setPower(0.2);
+                        myRobot.frontRight.setPower(0.2);
+                        myRobot.backLeft.setPower(0.2);
+                        myRobot.backRight.setPower(0.2);
+                        sleep(4000);
+                        myRobot.frontLeft.setPower(0);
+                        myRobot.frontRight.setPower(0);
+                        myRobot.backLeft.setPower(0);
+                        myRobot.backRight.setPower(0);
+
+                        myRobot.arm.setTargetPosition(0);
+                        myRobot.arm.setPower(0);
+                        sleep(500);
+
+                    }
+
+                    if (ourSkystone == 1) {
+                        myRobot.frontLeft.setPower(-0.2);
+                        myRobot.frontRight.setPower(-0.2);
+                        myRobot.backLeft.setPower(-0.2);
+                        myRobot.backRight.setPower(-0.2);
+                        sleep(4000);
+                        myRobot.frontLeft.setPower(0);
+                        myRobot.frontRight.setPower(0);
+                        myRobot.backLeft.setPower(0);
+                        myRobot.backRight.setPower(0);
+
+                        myRobot.frontLeft.setPower(+0.2);
+                        myRobot.frontRight.setPower(-0.2);
+                        myRobot.backLeft.setPower(-0.2);
+                        myRobot.backRight.setPower(+0.2);
+                        sleep(1000);
+                        myRobot.frontLeft.setPower(0);
+                        myRobot.frontRight.setPower(0);
+                        myRobot.backLeft.setPower(0);
+                        myRobot.backRight.setPower(0);
+
+                        sleep(10000);
+
+                        myRobot.frontLeft.setPower(-0.2);
+                        myRobot.frontRight.setPower(+0.2);
+                        myRobot.backLeft.setPower(+0.2);
+                        myRobot.backRight.setPower(-0.2);
+                        sleep(1000);
+                        myRobot.frontLeft.setPower(0);
+                        myRobot.frontRight.setPower(0);
+                        myRobot.backLeft.setPower(0);
+                        myRobot.backRight.setPower(0);
+
+                        myRobot.frontLeft.setPower(0.2);
+                        myRobot.frontRight.setPower(0.2);
+                        myRobot.backLeft.setPower(0.2);
+                        myRobot.backRight.setPower(0.2);
+                        sleep(4000);
+                        myRobot.frontLeft.setPower(0);
+                        myRobot.frontRight.setPower(0);
+                        myRobot.backLeft.setPower(0);
+                        myRobot.backRight.setPower(0);
+
+                        myRobot.arm.setTargetPosition(0);
+                        myRobot.arm.setPower(0);
+                        sleep(500);
+
+                    }
+                }
+
             }
+
         }
 
         if (tfod != null) {
