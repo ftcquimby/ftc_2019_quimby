@@ -53,11 +53,11 @@ public class OmegaBot {
     public OmegaDriveTrain drivetrain;
 
     //CONSTANTS
-    public double HANDX_MINUS20DEGREES = .24;
-    public double HANDX_0DEGREES = .15;
-    public double HANDX_45DEGREES = .31;
-    public double HANDX_90DEGREES = .47;
-    public double HANDX_135DEGREES = .67;
+    public double HANDX_0DEGREES = .08;
+    public double HANDX_45DEGREES = .23;
+    public double HANDX_90DEGREES = .4;
+    public double HANDX_135DEGREES = .6;
+    public double HANDX_180DEGREES = .8;
     public double FINGERS_GRAB = .29;
     public double FINGERS_OPEN = .6; //.43
     public double LEFT_FOUNDATION_GRIPPER_GRAB = .572;
@@ -71,34 +71,34 @@ public class OmegaBot {
     //Starting position is ROW 2
     //This array has [StepNo][HandY Position][Arm Rotation Position][Extension][HandX Position][SleepAfterHandChanges][SleepAfterArmExtChanges]
     public double[][] HANDHANGPOSITION = {
-            {0,0.81, -190,-200,HANDX_0DEGREES,0,0},
-            {1,0.75,10,-200,HANDX_0DEGREES,500,500},
-            {2,0.75,40,-200,HANDX_0DEGREES,500,500},
-            {3,0.75,125,-200,HANDX_0DEGREES,500,0},
-            {4,0.74,250,-200,HANDX_0DEGREES,0,0},
-            {5,0.72,375,-200,HANDX_0DEGREES,0,0},
-            {6,0.70,500,-200,HANDX_0DEGREES,0,0},
-            {7,0.68,625,-200,HANDX_0DEGREES,0,0},
-            {8,0.66,750,-200,HANDX_0DEGREES,0,0},
-            {9,0.64,875,-200,HANDX_0DEGREES,0,500},
-            {10,0.61,1000,-1350,HANDX_0DEGREES,0,500},
-            {11,0.57,1125,-1350,HANDX_0DEGREES,0,0},
-            {12,0.53,1250,-1350,HANDX_0DEGREES,0,0},
-            {13,0.49,1375,-1350,HANDX_0DEGREES,0,0},
-            {14,0.44,1500,-1600,HANDX_0DEGREES,0,0},
-            {15,0.39,1625,-1600,HANDX_0DEGREES,0,0},
-            {16,0.32,1750,-1600,HANDX_0DEGREES,0,500},
-            {17,0.28,1875,-1600,HANDX_0DEGREES,0,0},
-            {18,0.25,1950,-1600,HANDX_0DEGREES,0,0},
-            {19,0.19,2100,-1600,HANDX_0DEGREES,0,0},
-            {20,0.13,2200,-1600,HANDX_0DEGREES,0,0},
-            {21,0.10,2300,-1600,HANDX_0DEGREES,0,0},
-            {22,0.10,2400,-1600,HANDX_0DEGREES,0,0},
-            {23,0.10,2500,-1600,HANDX_0DEGREES,0,0},
-            {24,0.08,2600,-1600,HANDX_0DEGREES,0,0},
-            {25,0.08,2700,-1600,HANDX_0DEGREES,0,0},
-            {26,0.08,2800,-1600,HANDX_0DEGREES,0,0},
-            {27,0.08,2900,-1600,HANDX_0DEGREES,0,0}
+            {0,0.52, -190,-200,HANDX_0DEGREES,0,0},
+            {1,0.48,10,-200,HANDX_0DEGREES,500,500},
+            {2,0.48,40,-200,HANDX_0DEGREES,500,500},
+            {3,0.48,125,-200,HANDX_0DEGREES,500,0},
+            {4,0.46,250,-200,HANDX_0DEGREES,0,0},
+            {5,0.44,375,-200,HANDX_0DEGREES,0,0},
+            {6,0.42,500,-200,HANDX_0DEGREES,0,0},
+            {7,0.40,625,-200,HANDX_0DEGREES,0,0},
+            {8,0.38,750,-200,HANDX_0DEGREES,0,0},
+            {9,0.36,875,-200,HANDX_0DEGREES,0,500},
+            {10,0.33,1000,-1350,HANDX_0DEGREES,0,500},
+            {11,0.29,1125,-1350,HANDX_0DEGREES,0,0},
+            {12,0.25,1250,-1350,HANDX_0DEGREES,0,0},
+            {13,0.21,1375,-1350,HANDX_0DEGREES,0,0},
+            {14,0.18,1500,-1600,HANDX_0DEGREES,0,0},
+            {15,0.16,1625,-1600,HANDX_0DEGREES,0,0},
+            {16,0.14,1750,-1600,HANDX_0DEGREES,0,500},
+            {17,0.11,1875,-1600,HANDX_0DEGREES,0,0},
+            {18,0.09,1950,-1600,HANDX_0DEGREES,0,0},
+            {19,0.07,2100,-1600,HANDX_180DEGREES,0,0},
+            {20,0.05,2200,-1600,HANDX_180DEGREES,0,0},
+            {21,0.04,2300,-1600,HANDX_180DEGREES,0,0},
+            {22,0.03,2400,-1600,HANDX_180DEGREES,0,0},
+            {23,0.02,2500,-1600,HANDX_180DEGREES,0,0},
+            {24,0.00,2600,-1600,HANDX_180DEGREES,0,0},
+            {25,0.00,2700,-1600,HANDX_180DEGREES,0,0},
+            {26,0.00,2800,-1600,HANDX_180DEGREES,0,0},
+            {27,0.00,2900,-1600,HANDX_180DEGREES,0,0}
     };
 
     //3.937-inch diameter wheels, 1 wheel rotations per 1 motor rotation; all Yellow Jacket 19.2:1 motors for wheels (537.6 ticks per rev for 1:1); 27 inch turning diameter

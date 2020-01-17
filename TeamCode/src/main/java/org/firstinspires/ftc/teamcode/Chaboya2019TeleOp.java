@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.content.Context;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -7,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.ftccommon.SoundPlayer;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -38,6 +41,19 @@ public class Chaboya2019TeleOp extends LinearOpMode {
     private boolean brickFound1 = false;
     private boolean brickFound2 = false;
 
+    String  sounds[] =  {"ss_alarm", "ss_bb8_down", "ss_bb8_up", "ss_darth_vader", "ss_fly_by",
+            "ss_mf_fail", "ss_laser", "ss_laser_burst", "ss_light_saber", "ss_light_saber_long", "ss_light_saber_short",
+            "ss_light_speed", "ss_mine", "ss_power_up", "ss_r2d2_up", "ss_roger_roger", "ss_siren", "ss_wookie" };
+    private boolean soundPlaying = false;
+    Context mySoundApp = hardwareMap.appContext;
+    SoundPlayer.PlaySoundParams params = new SoundPlayer.PlaySoundParams();
+    params.loopControl = 0;
+    params.waitForNonLoopingSoundsToFinish = true;
+    int soundIndex = 0;
+    int soundID    = -1;
+    int SS_R2D2_UP = 14;
+    int SS_ROGER_ROGER = 15;
+
     private boolean noStone = true;
 
     public void runOpMode(){
@@ -55,10 +71,56 @@ public class Chaboya2019TeleOp extends LinearOpMode {
         robot.extension.setTargetPosition(0);
         robot.extension.setPower(.2);
         robot.extension.setMode(DcMotor.RunMode.RUN_TO_POSITION);//MadanBellam
+        sleep(200);
 
-        //robot.hand_x.setPosition(robot.HANDX_0DEGREES);
-        //robot.hand_y.setPosition(.85);
-        //robot.fingers.setPosition(robot.FINGERS_GRAB);
+        robot.hand_x.setPosition(robot.HANDX_0DEGREES);
+        robot.hand_y.setPosition(.85);
+        robot.fingers.setPosition(robot.FINGERS_OPEN);
+
+        //Wake up - check the world - and go back to rest
+/*
+        robot.arm.setTargetPosition(1500);
+        robot.arm.setPower(.5);
+        sleep(4000);
+        robot.extension.setTargetPosition(-2000);
+        robot.extension.setPower(.5);
+        sleep(5000);
+
+        soundIndex = SS_R2D2_UP;
+        if ((soundID = mySoundApp.getResources().getIdentifier(sounds[soundIndex], "raw", mySoundApp.getPackageName())) != 0){
+
+            // Signal that the sound is now playing.
+            soundPlaying = true;
+
+            // Start playing, and also Create a callback that will clear the playing flag when the sound is complete.
+            SoundPlayer.getInstance().startPlaying(mySoundApp, soundID, params, null,
+                    new Runnable() {
+                        public void run() {
+                            soundPlaying = false;
+                        }} );
+        }
+
+        robot.hand_y.setPosition(.92);
+        sleep(1000);
+        robot.hand_x.setPosition(robot.HANDX_45DEGREES);
+        sleep(1000);
+        robot.hand_x.setPosition(robot.HANDX_90DEGREES);
+        sleep(2000);
+        robot.hand_x.setPosition(robot.HANDX_135DEGREES);
+        sleep(3000);
+        robot.hand_x.setPosition(robot.HANDX_MINUS45DEGREES);
+        sleep(2000);
+        robot.hand_x.setPosition(robot.HANDX_0DEGREES);
+        sleep(3000);
+        robot.hand_y.setPosition(.85);
+
+        robot.extension.setTargetPosition(0);
+        robot.extension.setPower(.5);
+        sleep(4000);
+        robot.arm.setTargetPosition(300);
+        robot.arm.setPower(.5);
+        sleep(2000);
+*/
 
         waitForStart();
         runtime = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
@@ -75,10 +137,10 @@ public class Chaboya2019TeleOp extends LinearOpMode {
             servoProcess();
             intakeProcessStop();
             intakeProcessInOut();
-            foundationGrippers();
             */
 
             //testMotors();
+
             drivetrainProcess();
             pickupOnA();
             pickupOnB();
@@ -90,6 +152,7 @@ public class Chaboya2019TeleOp extends LinearOpMode {
             armProcess3();
             handXManualProcess();
             handYManualProcess();
+            foundationGrippers();
 
         }
     }
@@ -100,12 +163,8 @@ public class Chaboya2019TeleOp extends LinearOpMode {
         if (gamepad2.a == true){
             //rotate arm up to get out of the way of the front motors
 
-            robot.arm.setTargetPosition(300);//300
+            robot.arm.setTargetPosition(700);
             robot.arm.setPower(.5);
-            sleep(500);
-
-            robot.hand_y.setPosition(.85);
-            robot.fingers.setPosition(robot.FINGERS_OPEN);
             sleep(500);
 
             //extend arm out
@@ -113,19 +172,36 @@ public class Chaboya2019TeleOp extends LinearOpMode {
             robot.extension.setPower(.5);
             sleep(1400);
 
+            robot.hand_y.setPosition(.85);
+            robot.fingers.setPosition(robot.FINGERS_OPENWIDE);
+            sleep(500);
+
             //rotate arm to be ready for pickup, Pickup happens at 200
-            robot.arm.setTargetPosition(200);
+            robot.arm.setTargetPosition(300);
             robot.arm.setPower(.5);
             sleep(1000);
 
             robot.hand_y.setPosition(.85);
             robot.fingers.setPosition(robot.FINGERS_GRAB);
-            sleep(1000);
+            soundIndex = SS_ROGER_ROGER;
+            if ((soundID = mySoundApp.getResources().getIdentifier(sounds[soundIndex], "raw", mySoundApp.getPackageName())) != 0){
 
+                // Signal that the sound is now playing.
+                soundPlaying = true;
+
+                // Start playing, and also Create a callback that will clear the playing flag when the sound is complete.
+                SoundPlayer.getInstance().startPlaying(mySoundApp, soundID, params, null,
+                        new Runnable() {
+                            public void run() {
+                                soundPlaying = false;
+                            }} );
+            }
+            sleep(200);
+/*
             robot.arm.setTargetPosition(300);
             robot.arm.setPower(.5);
             sleep(500);
-
+*/
 
 
         }
@@ -135,9 +211,8 @@ public class Chaboya2019TeleOp extends LinearOpMode {
 
         if (gamepad2.b == true){
             //rotate arm up to get out of the way of the front motors
-            robot.arm.setTargetPosition(300);
+            robot.arm.setTargetPosition(700);
             robot.arm.setPower(.5);
-            robot.hand_x.setPosition(robot.HANDX_90DEGREES);
             sleep(500);
 
             //extend arm out
@@ -145,19 +220,16 @@ public class Chaboya2019TeleOp extends LinearOpMode {
             robot.extension.setPower(.8);
             sleep(1400);
 
-            robot.hand_y.setPosition(.75);
-            robot.fingers.setPosition(robot.FINGERS_OPEN);
+            robot.hand_y.setPosition(.85);
+            robot.hand_x.setPosition(robot.HANDX_90DEGREES);
+            robot.fingers.setPosition(robot.FINGERS_OPENWIDE);
             sleep(500);
 
-            robot.arm.setTargetPosition(100);
+            robot.arm.setTargetPosition(300);
             robot.arm.setPower(.5);
             sleep(1000);
 
-            robot.arm.setTargetPosition(-100);
-            robot.arm.setPower(.5);
-            sleep(1000);
-
-            robot.hand_y.setPosition(.75);
+            robot.hand_y.setPosition(.85);
             robot.fingers.setPosition(robot.FINGERS_GRAB);
             sleep(1000);
 
@@ -175,9 +247,8 @@ public class Chaboya2019TeleOp extends LinearOpMode {
 
         if (gamepad2.x == true){
             //rotate arm up to get out of the way of the front motors
-            robot.arm.setTargetPosition(300);
+            robot.arm.setTargetPosition(700);
             robot.arm.setPower(.5);
-            robot.hand_x.setPosition(robot.HANDX_45DEGREES);
             sleep(500);
 
             //extend arm out
@@ -185,25 +256,18 @@ public class Chaboya2019TeleOp extends LinearOpMode {
             robot.extension.setPower(.8);
             sleep(1400);
 
-            robot.hand_y.setPosition(.75);
-            robot.fingers.setPosition(robot.FINGERS_OPEN);
+            robot.hand_y.setPosition(.85);
+            robot.hand_x.setPosition(robot.HANDX_45DEGREES);
+            robot.fingers.setPosition(robot.FINGERS_OPENWIDE);
             sleep(500);
 
-            robot.arm.setTargetPosition(100);
+            robot.arm.setTargetPosition(300);
             robot.arm.setPower(.5);
             sleep(1000);
 
-            robot.arm.setTargetPosition(-100);
-            robot.arm.setPower(.5);
-            sleep(1000);
-
-            robot.hand_y.setPosition(.75);
+            robot.hand_y.setPosition(.85);
             robot.fingers.setPosition(robot.FINGERS_GRAB);
             sleep(1000);
-
-            robot.arm.setTargetPosition(0);
-            robot.arm.setPower(.5);
-            sleep(500);
 
             robot.hand_x.setPosition(robot.HANDX_0DEGREES);
 
@@ -214,7 +278,7 @@ public class Chaboya2019TeleOp extends LinearOpMode {
 
         if (gamepad2.y == true){
             //rotate arm up to get out of the way of the front motors
-            robot.arm.setTargetPosition(300);
+            robot.arm.setTargetPosition(700);
             robot.arm.setPower(.5);
             sleep(500);
 
@@ -223,31 +287,23 @@ public class Chaboya2019TeleOp extends LinearOpMode {
             robot.extension.setPower(.8);
             sleep(1400);
 
-            robot.hand_y.setPosition(.75);
+            robot.hand_y.setPosition(.85);
             robot.hand_x.setPosition(robot.HANDX_135DEGREES);
-            robot.fingers.setPosition(robot.FINGERS_OPEN);
+            robot.fingers.setPosition(robot.FINGERS_OPENWIDE);
             sleep(500);
 
-            robot.arm.setTargetPosition(100);
+            robot.arm.setTargetPosition(300);
             robot.arm.setPower(.5);
             sleep(1000);
 
-            robot.arm.setTargetPosition(-100);
-            robot.arm.setPower(.5);
-            sleep(1000);
-
-            robot.hand_y.setPosition(.75);
+            robot.hand_y.setPosition(.85);
             robot.fingers.setPosition(robot.FINGERS_GRAB);
             sleep(1000);
 
-            //extend arm out
-            robot.extension.setTargetPosition(-3200);
+            //Extend so that the stone does not hit the chassis when turning
+            robot.extension.setTargetPosition(-3250);
             robot.extension.setPower(.8);
-            sleep(1000);
-
-            robot.arm.setTargetPosition(0);
-            robot.arm.setPower(.5);
-            sleep(1000);
+            sleep(1500);
 
             robot.hand_x.setPosition(robot.HANDX_0DEGREES);
 
@@ -267,7 +323,10 @@ public class Chaboya2019TeleOp extends LinearOpMode {
 
             robot.hand_x.setPosition(robot.HANDX_0DEGREES);
             robot.hand_y.setPosition(.85);
+            robot.fingers.setPosition(robot.FINGERS_OPENWIDE);
+            sleep(1000);
             robot.fingers.setPosition(robot.FINGERS_OPEN);//Close fingers
+            sleep(1000);
 
             //withdraw arm in
             robot.extension.setTargetPosition(0);
@@ -292,9 +351,9 @@ public class Chaboya2019TeleOp extends LinearOpMode {
         if(gamepad2.right_stick_y < -.5){ //Extends the Arm
             //robot.arm.setPower(.75);
             //moveArm(-30);
-            if (ePosition >= -3800) { //Never go below -1000
-                if (ePosition <= -3720) {
-                    ePosition = -3800;
+            if (ePosition >= -4350) { //Never go below -1000
+                if (ePosition <= -4270) {
+                    ePosition = -4350;
                 }
                 else {
                     ePosition = ePosition - 80;
@@ -416,7 +475,7 @@ public class Chaboya2019TeleOp extends LinearOpMode {
             if (dPadUpPressed == false) {
                 dPadUpPressed = true;
                 if (curHandYPosition <= .95) {
-                    robot.hand_x.setPosition(curHandYPosition + .05);
+                    robot.hand_y.setPosition(curHandYPosition + .05);
                 }
             } else {
                 //We already saw this button press - do not do it again now
@@ -429,7 +488,7 @@ public class Chaboya2019TeleOp extends LinearOpMode {
             if (dPadDownPressed == false) {
                 dPadDownPressed = true;
                 if (curHandYPosition >= .05) {
-                    robot.hand_x.setPosition(curHandYPosition - .05);
+                    robot.hand_y.setPosition(curHandYPosition - .05);
                 }
             } else {
                 //We already saw this button press - do not do it again now
@@ -442,6 +501,16 @@ public class Chaboya2019TeleOp extends LinearOpMode {
 
     //Test Motors
     public void testMotors(){
+
+        if (gamepad2.a){
+            robot.frontLeftGripper.setPosition(0);
+            robot.frontRightGripper.setPosition(0);
+        }
+        if (gamepad2.b){
+            robot.frontLeftGripper.setPosition(1);
+            robot.frontRightGripper.setPosition(1);
+        }
+
         if (gamepad1.a == true){
             robot.frontLeft.setPower(.2);
             robot.frontRight.setPower(0);
@@ -616,9 +685,13 @@ public class Chaboya2019TeleOp extends LinearOpMode {
     public void grabRelease(){
 
         if(gamepad2.right_bumper){
-            robot.fingers.setPosition(robot.FINGERS_OPEN);
-        }else if(gamepad2.left_bumper){
             robot.fingers.setPosition(robot.FINGERS_GRAB);
+        }else if(gamepad2.left_bumper){
+            robot.fingers.setPosition(robot.FINGERS_OPEN);
+        }
+
+        if ((gamepad2.right_trigger > .5) && (gamepad2.left_trigger > .5)){
+            robot.fingers.setPosition(robot.FINGERS_OPENWIDE);
         }
     }
 
@@ -794,6 +867,15 @@ public class Chaboya2019TeleOp extends LinearOpMode {
         else if (gamepad1.right_bumper){
             robot.leftGripper.setPosition(robot.LEFT_FOUNDATION_GRIPPER_RELEASE);
             robot.rightGripper.setPosition(robot.RIGHT_FOUNDATION_GRIPPER_RELEASE);
+        }
+
+        if(gamepad1.left_trigger > .5){
+            robot.frontLeftGripper.setPosition(robot.FRONT_LEFT_FOUNDATION_GRIPPER_GRAB);
+            robot.frontRightGripper.setPosition(robot.FRONT_RIGHT_FOUNDATION_GRIPPER_GRAB);
+        }
+        else if (gamepad1.right_trigger > .5){
+            robot.frontLeftGripper.setPosition(robot.FRONT_LEFT_FOUNDATION_GRIPPER_RELEASE);
+            robot.frontRightGripper.setPosition(robot.FRONT_RIGHT_FOUNDATION_GRIPPER_RELEASE);
         }
     }
 

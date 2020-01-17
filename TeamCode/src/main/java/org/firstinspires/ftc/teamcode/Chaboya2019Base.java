@@ -36,6 +36,8 @@ public class Chaboya2019Base {
     public Servo fingers; //cable 3
     public Servo leftGripper;
     public Servo rightGripper;
+    public Servo frontLeftGripper;
+    public Servo frontRightGripper;
 
     public DistanceSensor distanceSensor1;
     public DistanceSensor distanceSensor2;
@@ -50,7 +52,7 @@ public class Chaboya2019Base {
     public OmegaDriveTrain drivetrain;
 
     //CONSTANTS
-    public double HANDX_MINUS20DEGREES = .2;//This is wrong - fix it
+    public double HANDX_MINUS45DEGREES = .0;//This is wrong - fix it
     public double HANDX_0DEGREES = 0.13;
     public double HANDX_45DEGREES = .30;
     public double HANDX_90DEGREES = .46;
@@ -58,10 +60,15 @@ public class Chaboya2019Base {
 
     public double FINGERS_GRAB = .13;
     public double FINGERS_OPEN = .21;
+    public double FINGERS_OPENWIDE = .40;
     public double LEFT_FOUNDATION_GRIPPER_GRAB = .2;
     public double LEFT_FOUNDATION_GRIPPER_RELEASE = .6;
     public double RIGHT_FOUNDATION_GRIPPER_GRAB = .0;
     public double RIGHT_FOUNDATION_GRIPPER_RELEASE = .4;
+    public double FRONT_LEFT_FOUNDATION_GRIPPER_GRAB = .0;
+    public double FRONT_LEFT_FOUNDATION_GRIPPER_RELEASE = .9;
+    public double FRONT_RIGHT_FOUNDATION_GRIPPER_GRAB = .5;
+    public double FRONT_RIGHT_FOUNDATION_GRIPPER_RELEASE = 1;
 
     //The array tells us how to move the arm and hand so that the hand is always in a hanging position
     //This hanging position lets us pickup and carry something in a stable fashion with the hand
@@ -144,6 +151,13 @@ public class Chaboya2019Base {
         rightGripper.setDirection(Servo.Direction.REVERSE);
         leftGripper.setPosition(LEFT_FOUNDATION_GRIPPER_RELEASE);
         rightGripper.setPosition(RIGHT_FOUNDATION_GRIPPER_RELEASE);
+
+        frontLeftGripper = hardwareMap.get(Servo.class, "front_left_gripper");
+        //frontLeftGripper.setDirection(Servo.Direction.REVERSE);
+        frontRightGripper = hardwareMap.get(Servo.class, "front_right_gripper");
+        //frontRightGripper.setDirection(Servo.Direction.REVERSE);
+        frontLeftGripper.setPosition(FRONT_LEFT_FOUNDATION_GRIPPER_RELEASE);
+        frontRightGripper.setPosition(FRONT_RIGHT_FOUNDATION_GRIPPER_RELEASE);
 
 
         distanceSensor1 = hardwareMap.get(DistanceSensor.class, "distance_sensor1");
