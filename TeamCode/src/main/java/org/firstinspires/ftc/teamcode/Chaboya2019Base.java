@@ -77,34 +77,37 @@ public class Chaboya2019Base {
     //This array has [StepNo][HandY Position][Arm Rotation Position][Extension][HandX Position][SleepAfterHandChanges][SleepAfterArmExtChanges]
     double HANDY_STARTPOSITION = .77;
     public double[][] HANDHANGPOSITION = {
-            {0,.87, -125,0,HANDX_0DEGREES,0,0},
-            {1,0.87,-125,0,HANDX_0DEGREES,0,0},
-            {2,0.87,0,0,HANDX_0DEGREES,500,0},
-            {3,0.85,125,0,HANDX_0DEGREES,500,0},
-            {4,0.83,250,0,HANDX_0DEGREES,0,0},
-            {5,0.81,375,0,HANDX_0DEGREES,0,0},
-            {6,0.79,500,0,HANDX_0DEGREES,0,0},
-            {7,0.74,625,0,HANDX_0DEGREES,0,0},
-            {8,0.52,750,0,HANDX_0DEGREES,0,0},
-            {9,0.52,875,0,HANDX_0DEGREES,0,500},
-            {10,0.52,1000,-1000,HANDX_0DEGREES,0,500},
-            {11,0.55,1125,-1000,HANDX_0DEGREES,0,0},
-            {12,0.53,1250,-1000,HANDX_0DEGREES,0,0},
-            {13,0.49,1375,-1000,HANDX_0DEGREES,0,0},
-            {14,0.44,1500,-1000,HANDX_0DEGREES,0,0},
-            {15,0.39,1625,-1000,HANDX_0DEGREES,0,0},
-            {16,0.39,1750,-1000,HANDX_0DEGREES,0,0},
-            {17,0.39,1875,-1000,HANDX_0DEGREES,0,0},
-            {18,0.37,1950,-1000,HANDX_0DEGREES,0,0},
-            {19,0.35,2025,-1000,HANDX_0DEGREES,0,0},
-            {20,0.33,2100,-1000,HANDX_0DEGREES,0,0},
-            {21,0.31,2200,-1000,HANDX_0DEGREES,0,0},
-            {22,0.29,2300,-1000,HANDX_0DEGREES,0,0},
-            {23,0.27,2400,-1000,HANDX_0DEGREES,0,0},
-            {24,0.25,2550,-1000,HANDX_0DEGREES,0,500},
-            {25,0.23,2675,-1000,HANDX_0DEGREES,0,0},
-            {26,0.21,2800,-1000,HANDX_0DEGREES,0,500},
-            {27,0.21,2900,-1000,HANDX_0DEGREES,0,0}
+            {0,.85, 0,0,HANDX_0DEGREES,0,0},
+            {1,0.83,200,0,HANDX_0DEGREES,0,0},
+            {2,0.81,400,0,HANDX_0DEGREES,0,0},
+            {3,0.78,600,0,HANDX_0DEGREES,0,0},
+            {4,0.76,800,0,HANDX_0DEGREES,0,0},
+            {5,0.74,1000,0,HANDX_0DEGREES,0,0},
+            {6,0.72,1200,0,HANDX_0DEGREES,0,0},
+            {7,0.70,1400,0,HANDX_0DEGREES,0,0},
+            {8,0.68,1600,0,HANDX_0DEGREES,0,0},
+            {9,0.66,1800,0,HANDX_0DEGREES,0,0},
+            {10,0.64,2000,0,HANDX_0DEGREES,0,0},
+            {11,0.62,2200,0,HANDX_0DEGREES,0,0},
+            {12,0.60,2400,0,HANDX_0DEGREES,0,0},
+            {13,0.58,2600,0,HANDX_0DEGREES,0,0},
+            {14,0.56,2800,0,HANDX_0DEGREES,0,0},
+            {15,0.54,3000,0,HANDX_0DEGREES,0,0},
+            {16,0.52,3200,0,HANDX_0DEGREES,0,0},
+            {17,0.50,3400,0,HANDX_0DEGREES,0,0},
+            {18,0.48,3600,0,HANDX_0DEGREES,0,0},
+            {19,0.46,3800,0,HANDX_0DEGREES,0,0},
+            {20,0.44,4000,0,HANDX_0DEGREES,0,0},
+            {21,0.42,4200,0,HANDX_0DEGREES,0,0},
+            {22,0.40,4400,0,HANDX_0DEGREES,0,0},
+            {23,0.38,4600,0,HANDX_0DEGREES,0,0},
+            {24,0.36,4800,0,HANDX_0DEGREES,0,0},
+            {25,0.34,5000,0,HANDX_0DEGREES,0,0},
+            {26,0.32,5200,0,HANDX_0DEGREES,0,0},
+            {27,0.30,5400,0,HANDX_0DEGREES,0,0},
+            {28,0.28,5600,0,HANDX_0DEGREES,0,0},
+            {29,0.26,5800,0,HANDX_0DEGREES,0,0},
+            {30,0.24,6000,0,HANDX_0DEGREES,0,0}
     };
 
     //3.937-inch diameter wheels, 1 wheel rotations per 1 motor rotation; all Yellow Jacket 19.2:1 motors for wheels (537.6 ticks per rev for 1:1); 27 inch turning diameter
@@ -181,8 +184,8 @@ public class Chaboya2019Base {
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        armCurStep = 2;
-        armPrevStep = 2;
+        armCurStep = 0;
+        armPrevStep = 0;
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

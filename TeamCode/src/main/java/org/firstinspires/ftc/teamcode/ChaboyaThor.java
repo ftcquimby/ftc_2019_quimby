@@ -45,10 +45,8 @@ public class ChaboyaThor extends LinearOpMode {
             "ss_mf_fail", "ss_laser", "ss_laser_burst", "ss_light_saber", "ss_light_saber_long", "ss_light_saber_short",
             "ss_light_speed", "ss_mine", "ss_power_up", "ss_r2d2_up", "ss_roger_roger", "ss_siren", "ss_wookie" };
     private boolean soundPlaying = false;
-    Context mySoundApp = hardwareMap.appContext;
-    SoundPlayer.PlaySoundParams params = new SoundPlayer.PlaySoundParams();
-    params.loopControl = 0;
-    params.waitForNonLoopingSoundsToFinish = true;
+    Context mySoundApp;
+    SoundPlayer.PlaySoundParams params;
     int soundIndex = 0;
     int soundID    = -1;
     int SS_R2D2_UP = 14;
@@ -58,6 +56,12 @@ public class ChaboyaThor extends LinearOpMode {
 
     public void runOpMode(){
         robot = new Chaboya2019Base(telemetry,hardwareMap);
+
+        mySoundApp = hardwareMap.appContext;
+        params = new SoundPlayer.PlaySoundParams();
+        params.loopControl = 0;
+        params.waitForNonLoopingSoundsToFinish = true;
+
 
         robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);//MadanBellam
         robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);//MadanBellam
