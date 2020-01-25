@@ -13,10 +13,10 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
 
-@Autonomous(name = "ChaboyaAutoBluePartnerAtWall")
+@Autonomous(name = "1-QuimbyAutoBluePartnerAtWall")
 
-public class ChaboyaAuto extends LinearOpMode {
-    private Chaboya2019Base myRobot;
+public class QuimbyAuto extends LinearOpMode {
+    private OmegaBot myRobot;
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_FIRST_ELEMENT = "Stone";
     private static final String LABEL_SECOND_ELEMENT = "Skystone";
@@ -32,10 +32,24 @@ public class ChaboyaAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        myRobot = new Chaboya2019Base(telemetry, hardwareMap);
+        myRobot = new OmegaBot(telemetry, hardwareMap);
         boolean finishedAuto = false;
 
+        /*
+        myRobot.leftGripper.setPosition(myRobot.LEFT_FOUNDATION_GRIPPER_RELEASE);
+        myRobot.rightGripper.setPosition(myRobot.RIGHT_FOUNDATION_GRIPPER_RELEASE);
 
+        sleep(2000);
+        myRobot.leftGripper.setPosition(myRobot.LEFT_FOUNDATION_GRIPPER_GRAB);
+        myRobot.rightGripper.setPosition(myRobot.RIGHT_FOUNDATION_GRIPPER_GRAB);
+
+        sleep(2000);
+
+        myRobot.leftGripper.setPosition(myRobot.LEFT_FOUNDATION_GRIPPER_RELEASE);
+        myRobot.rightGripper.setPosition(myRobot.RIGHT_FOUNDATION_GRIPPER_RELEASE);
+
+        sleep(2000);
+*/
         myRobot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);//MadanBellam
         myRobot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);//MadanBellam
         myRobot.arm.setTargetPosition(0);

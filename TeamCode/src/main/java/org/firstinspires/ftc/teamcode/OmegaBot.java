@@ -40,8 +40,8 @@ public class OmegaBot {
     public Servo leftGripper;
     public Servo rightGripper;
 
-    public DistanceSensor distanceSensor1;
-    public DistanceSensor distanceSensor2;
+    //public DistanceSensor distanceSensor1;
+    //public DistanceSensor distanceSensor2;
 
     //If true Runs in steps syncd with HandY position as Hang Down with Pad2 A/B control. If false arm runs independent of handY
     //with same A/B control but without syncing with HandY for hangdown
@@ -59,11 +59,12 @@ public class OmegaBot {
     public double HANDX_135DEGREES = .6;
     public double HANDX_180DEGREES = .8;
     public double FINGERS_GRAB = .29;
-    public double FINGERS_OPEN = .6; //.43
-    public double LEFT_FOUNDATION_GRIPPER_GRAB = .572;
-    public double LEFT_FOUNDATION_GRIPPER_RELEASE = .172;
-    public double RIGHT_FOUNDATION_GRIPPER_GRAB = .82;
-    public double RIGHT_FOUNDATION_GRIPPER_RELEASE = .4;
+    public double FINGERS_OPEN = .42; //.43
+    public double FINGERS_OPENWIDE = .52;
+    public double LEFT_FOUNDATION_GRIPPER_GRAB = .77;
+    public double LEFT_FOUNDATION_GRIPPER_RELEASE = .12;
+    public double RIGHT_FOUNDATION_GRIPPER_GRAB = 1;
+    public double RIGHT_FOUNDATION_GRIPPER_RELEASE = .35;
 
     //The array tells us how to move the arm and hand so that the hand is always in a hanging position
     //This hanging position lets us pickup and carry something in a stable fashion with the hand
@@ -71,34 +72,34 @@ public class OmegaBot {
     //Starting position is ROW 2
     //This array has [StepNo][HandY Position][Arm Rotation Position][Extension][HandX Position][SleepAfterHandChanges][SleepAfterArmExtChanges]
     public double[][] HANDHANGPOSITION = {
-            {0,0.52, -190,-200,HANDX_0DEGREES,0,0},
-            {1,0.48,10,-200,HANDX_0DEGREES,500,500},
-            {2,0.48,40,-200,HANDX_0DEGREES,500,500},
-            {3,0.48,125,-200,HANDX_0DEGREES,500,0},
-            {4,0.46,250,-200,HANDX_0DEGREES,0,0},
-            {5,0.44,375,-200,HANDX_0DEGREES,0,0},
-            {6,0.42,500,-200,HANDX_0DEGREES,0,0},
-            {7,0.40,625,-200,HANDX_0DEGREES,0,0},
-            {8,0.38,750,-200,HANDX_0DEGREES,0,0},
-            {9,0.36,875,-200,HANDX_0DEGREES,0,500},
-            {10,0.33,1000,-1350,HANDX_0DEGREES,0,500},
-            {11,0.29,1125,-1350,HANDX_0DEGREES,0,0},
-            {12,0.25,1250,-1350,HANDX_0DEGREES,0,0},
-            {13,0.21,1375,-1350,HANDX_0DEGREES,0,0},
-            {14,0.18,1500,-1600,HANDX_0DEGREES,0,0},
-            {15,0.16,1625,-1600,HANDX_0DEGREES,0,0},
-            {16,0.14,1750,-1600,HANDX_0DEGREES,0,500},
-            {17,0.11,1875,-1600,HANDX_0DEGREES,0,0},
-            {18,0.09,1950,-1600,HANDX_0DEGREES,0,0},
-            {19,0.07,2100,-1600,HANDX_180DEGREES,0,0},
-            {20,0.05,2200,-1600,HANDX_180DEGREES,0,0},
-            {21,0.04,2300,-1600,HANDX_180DEGREES,0,0},
-            {22,0.03,2400,-1600,HANDX_180DEGREES,0,0},
-            {23,0.02,2500,-1600,HANDX_180DEGREES,0,0},
-            {24,0.00,2600,-1600,HANDX_180DEGREES,0,0},
-            {25,0.00,2700,-1600,HANDX_180DEGREES,0,0},
-            {26,0.00,2800,-1600,HANDX_180DEGREES,0,0},
-            {27,0.00,2900,-1600,HANDX_180DEGREES,0,0}
+            {0,0.07, -190,0,HANDX_0DEGREES,0,0},
+            {1,0.07,10,0,HANDX_0DEGREES,500,500},
+            {2,0.07,40,0,HANDX_0DEGREES,500,500},
+            {3,0.07,300,0,HANDX_0DEGREES,500,0},
+            {4,0.07,600,0,HANDX_0DEGREES,0,0},
+            {5,0.08,900,0,HANDX_0DEGREES,0,0},
+            {6,0.09,1200,0,HANDX_0DEGREES,0,0},
+            {7,0.12,1500,0,HANDX_0DEGREES,0,0},
+            {8,0.14,1800,0,HANDX_0DEGREES,0,0},
+            {9,0.35,2100,0,HANDX_0DEGREES,0,1000},
+            {10,0.35,2500,-1350,HANDX_0DEGREES,0,1000},
+            {11,0.35,3000,-1350,HANDX_0DEGREES,0,0},
+            {12,0.35,3000,-1350,HANDX_0DEGREES,0,0},
+            {13,0.37,3000,-1350,HANDX_0DEGREES,0,0},
+            {14,0.39,3000,-1600,HANDX_0DEGREES,0,0},
+            {15,0.41,3000,-1600,HANDX_0DEGREES,0,0},
+            {16,0.43,3000,-1600,HANDX_0DEGREES,0,500},
+            {17,0.47,3000,-1600,HANDX_0DEGREES,0,0},
+            {18,0.52,3000,-1600,HANDX_0DEGREES,0,0},
+            {19,0.57,3000,-1600,HANDX_0DEGREES,0,0},
+            {20,0.62,3000,-1600,HANDX_0DEGREES,0,0},
+            {21,0.65,3000,-1600,HANDX_0DEGREES,0,0},
+            {22,0.67,3000,-1600,HANDX_0DEGREES,0,0},
+            {23,0.72,3000,-1600,HANDX_0DEGREES,0,0},
+            {24,0.72,3000,-1600,HANDX_0DEGREES,0,0},
+            {25,0.72,3000,-1600,HANDX_0DEGREES,0,0},
+            {26,0.72,3000,-1600,HANDX_0DEGREES,0,0},
+            {27,0.72,3000,-1600,HANDX_0DEGREES,0,0}
     };
 
     //3.937-inch diameter wheels, 1 wheel rotations per 1 motor rotation; all Yellow Jacket 19.2:1 motors for wheels (537.6 ticks per rev for 1:1); 27 inch turning diameter
@@ -136,7 +137,7 @@ public class OmegaBot {
 
         hand_x = hardwareMap.get(Servo.class, "hand_x");
         hand_y = hardwareMap.get(Servo.class, "hand_y");
-        hand_y.setDirection(Servo.Direction.REVERSE);
+        //hand_y.setDirection(Servo.Direction.REVERSE);
         fingers = hardwareMap.get(Servo.class, "fingers");
 
         leftGripper = hardwareMap.get(Servo.class, "left_gripper");
@@ -146,8 +147,8 @@ public class OmegaBot {
         rightGripper.setPosition(RIGHT_FOUNDATION_GRIPPER_RELEASE);
 
 
-        distanceSensor1 = hardwareMap.get(DistanceSensor.class, "distance_sensor1");
-        distanceSensor2 = hardwareMap.get(DistanceSensor.class, "distance_sensor2");
+        //distanceSensor1 = hardwareMap.get(DistanceSensor.class, "distance_sensor1");
+        //distanceSensor2 = hardwareMap.get(DistanceSensor.class, "distance_sensor2");
 
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",

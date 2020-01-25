@@ -39,6 +39,16 @@ public class LinearTeleop extends LinearOpMode {
 
     private boolean noStone = true;
 
+    private boolean TwoXPressed = false;
+    private boolean TwoYPressed = false;
+    private int curStackPosition = 0;
+
+    private boolean TwoAPressed = false;
+    private boolean TwoBPressed = false;
+    private int curABPosition = 0;
+
+    private boolean TwoBackPressed = false;
+
     public void runOpMode(){
         robot = new OmegaBot(telemetry,hardwareMap);
 
@@ -51,13 +61,14 @@ public class LinearTeleop extends LinearOpMode {
 
         robot.extension.setMode(DcMotor.RunMode.RUN_USING_ENCODER);//MadanBellam
         robot.extension.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);//MadanBellam
-        robot.extension.setTargetPosition(0);
+        robot.extension.setTargetPosition((int)robot.HANDHANGPOSITION[robot.armCurStep][3]);
         robot.extension.setPower(.2);
         robot.extension.setMode(DcMotor.RunMode.RUN_TO_POSITION);//MadanBellam
+        sleep(3000);
 
         robot.hand_x.setPosition(robot.HANDX_0DEGREES);
-        robot.hand_y.setPosition(.48);
-        robot.fingers.setPosition(robot.FINGERS_GRAB);
+        robot.hand_y.setPosition(robot.HANDHANGPOSITION[robot.armCurStep][1]);
+        robot.fingers.setPosition(robot.FINGERS_OPEN);
         sleep((long)robot.HANDHANGPOSITION[robot.armCurStep][5]);
 
         waitForStart();
@@ -72,24 +83,227 @@ public class LinearTeleop extends LinearOpMode {
 
 
             //stoneFoundProcess();
-            drivetrainProcess();
+
             //intakeProcessStop();
-            //intakeProcessInOut();
-            //foundationGrippers();
+            intakeProcessInOut();
+            foundationGrippers();
 
 
-            pickupOnA();
-            pickupOnB();
-            pickupOnX();//Going away leftwards from the robot
-            pickupOnY();//Going away rightwards from the robot
-            armToHome(true);
+            //pickupOnA();
+            //pickupOnB();
+            //pickupOnX();//Going away leftwards from the robot
+            //pickupOnY();//Going away rightwards from the robot
+            //armToHome(true);
+
+
+
+            drivetrainProcess();
+            armProcess();
             grabRelease();
+            armForStacking();
+            goToDropPosition();//armForStacking takes arm to 200 above, this brings it down 200
+
+
+            //Disable all below functions after testing. Don't need these features
+            //handXManualProcess();
+            handYManualProcess();
             extensionProcess();
             armProcess3();
-            handXManualProcess();
-            handYManualProcess();
 
         }
+    }
+
+    public void goToDropPosition(){
+        int curArmPosition;
+        if (gamepad2.back == true){
+            if (TwoBackPressed == false){
+                TwoBackPressed = true;
+                //rotate arm up to get out of the way of the front motors
+                curArmPosition = robot.arm.getTargetPosition();
+                curArmPosition = curArmPosition+200;
+                robot.arm.setTargetPosition(curArmPosition);
+                robot.arm.setPower(.2);
+            } else{
+                TwoBackPressed = false;
+            }
+        }
+    }
+
+    public void armForStacking(){
+        boolean stackingPositionChanged = false;
+        if (gamepad2.y){
+            if (TwoYPressed == false) {
+                TwoYPressed = true;
+                if (curStackPosition == 0){//start with 6 if y is pressed
+                    curStackPosition = 6;
+                    stackingPositionChanged = true;
+                } else if (curStackPosition < 6) {
+                    curStackPosition++;
+                    stackingPositionChanged = true;
+                }
+            } else {
+                //We already saw this button press - do not do it again now
+            }
+        } else {
+            TwoYPressed = false; //button is not pressed any more
+        }
+
+        if (gamepad2.x){ // trigger pressed
+            if (TwoXPressed == false) {
+                TwoXPressed = true;
+                if (curStackPosition == 0){ //start with 1
+                    curStackPosition = 1;
+                } else if (curStackPosition > 1) {
+                    curStackPosition--;
+                    stackingPositionChanged = true;
+                }
+            } else {
+                //We already saw this button press - do not do it again now
+            }
+        } else {
+            TwoXPressed = false; //button is not pressed any more
+        }
+
+
+        if (stackingPositionChanged == true){
+            //telemetry.addData("\r\nstackingPositionChanged: ", stackingPositionChanged);
+            telemetry.addData("\r\ncurStackPosition: ", curStackPosition);
+            telemetry.update();
+
+            switch (curStackPosition) {
+                case 1://1st Stone
+                    robot.hand_y.setPosition(.72);
+                    robot.arm.setTargetPosition(6000);//2900
+                    robot.arm.setPower(.8);
+                    robot.extension.setTargetPosition(-1600);
+                    robot.extension.setPower(.8);
+                    //sleep(1000);
+
+                    break;
+                case 2:
+                    robot.hand_y.setPosition(.72);
+                    robot.arm.setTargetPosition(4600);//2900
+                    robot.arm.setPower(.8);
+                    robot.extension.setTargetPosition(-1020);
+                    robot.extension.setPower(.8);
+                    //sleep(1000);
+                    break;
+                case 3:
+                    robot.hand_y.setPosition(.58);
+                    robot.arm.setTargetPosition(4400);//2900
+                    robot.arm.setPower(.8);
+                    robot.extension.setTargetPosition(-2582);
+                    robot.extension.setPower(.8);
+
+                    //sleep(1000);
+                    break;
+                case 4:
+                    robot.hand_y.setPosition(.57);
+                    robot.arm.setTargetPosition(3960);//2900
+                    robot.arm.setPower(.8);
+                    robot.extension.setTargetPosition(-3100);
+                    robot.extension.setPower(.8);
+                    robot.extension.setPower(.8);
+                    //sleep(1000);
+                    break;
+                case 5:
+                    robot.hand_y.setPosition(.61);
+                    robot.arm.setTargetPosition(3390);//2900
+                    robot.arm.setPower(.8);
+                    robot.extension.setTargetPosition(-3035);
+                    robot.extension.setPower(.8);
+                    //sleep(1000);
+                    break;
+                case 6:
+                    robot.hand_y.setPosition(.72);
+                    robot.arm.setTargetPosition(2900);//2900
+                    robot.arm.setPower(.8);
+                    robot.extension.setTargetPosition(-3800);
+                    robot.extension.setPower(.8);
+                    //sleep(1000);
+                    break;
+            }
+
+
+        }
+    }
+
+    public void armProcess(){
+
+        /*
+        //Process each button press separately - the driver has to press, release, press
+        boolean ABChanged = false;
+        if(gamepad2.a){
+            if (TwoAPressed == false) {
+                TwoAPressed = true;
+                if (robot.armCurStep > 0) {
+                    robot.armCurStep--;
+                    ABChanged = true;
+                }
+            } else {
+
+            }
+        }else {
+            TwoAPressed = true;
+        }
+
+        if (gamepad2.b){
+            if (TwoBPressed == false) {
+                TwoBPressed = true;
+                if (robot.armCurStep < 27) {
+                    robot.armCurStep++;
+                    ABChanged = true;
+                }
+            }
+        }else {
+            TwoBPressed = false; //button is not pressed any more
+        }
+        */
+
+        if(gamepad2.a){
+            if (robot.armCurStep > 0){
+                robot.armCurStep--;
+            }
+        }else if (gamepad2.b){
+            if (robot.armCurStep < 13){
+                robot.armCurStep++;
+            }
+        }
+        if (robot.armCurStep != robot.armPrevStep){
+            if (robot.HANDHANGPOSITION[robot.armCurStep][1] != robot.HANDHANGPOSITION[robot.armPrevStep][1]){
+                robot.hand_y.setPosition(robot.HANDHANGPOSITION[robot.armCurStep][1]);
+            }
+            if (robot.HANDHANGPOSITION[robot.armCurStep][4] != robot.HANDHANGPOSITION[robot.armPrevStep][4]){
+                robot.hand_x.setPosition(robot.HANDHANGPOSITION[robot.armCurStep][4]);
+            }
+
+            //Give enough time for the hand position to change before changing the arm
+            //This is needed so that the fingers do not crash into the compliant wheels while coming down quickly
+            if (robot.HANDHANGPOSITION[robot.armCurStep][1] != robot.HANDHANGPOSITION[robot.armPrevStep][1]){
+                if (robot.HANDHANGPOSITION[robot.armCurStep][5] !=0) {
+                    sleep((long) robot.HANDHANGPOSITION[robot.armCurStep][5]);
+                }
+            }
+
+            if (robot.HANDHANGPOSITION[robot.armCurStep][2] != robot.HANDHANGPOSITION[robot.armPrevStep][2]){
+                robot.arm.setTargetPosition((int)robot.HANDHANGPOSITION[robot.armCurStep][2]);
+                robot.arm.setPower(.5);
+            }
+            if (robot.HANDHANGPOSITION[robot.armCurStep][3] != robot.HANDHANGPOSITION[robot.armPrevStep][3]) {
+                robot.extension.setTargetPosition((int)robot.HANDHANGPOSITION[robot.armCurStep][3]);
+                robot.extension.setPower(.5);
+            }
+
+            //Give enough time for the arm position to extend or withdraw
+            //This is needed so that the arm does not crash into the front surgical band while coming down quickly
+            if (robot.HANDHANGPOSITION[robot.armCurStep][3] != robot.HANDHANGPOSITION[robot.armPrevStep][3]){
+                if (robot.HANDHANGPOSITION[robot.armCurStep][6] !=0) {
+                    sleep((long) robot.HANDHANGPOSITION[robot.armCurStep][6]);
+                }
+            }
+            robot.armPrevStep = robot.armCurStep;
+        }
+
     }
 
     public void pickupOnA(){
@@ -278,10 +492,6 @@ public class LinearTeleop extends LinearOpMode {
 
     public void extensionProcess(){
         int ePosition = robot.extension.getCurrentPosition();
-        if (robot.logArmPosition){
-            telemetry.addData("\r\nExtension Encoder Position: ", ePosition);
-            telemetry.update();
-        }
 
         if(gamepad2.right_stick_y < -.5){ //Extends the Arm
             //robot.arm.setPower(.75);
@@ -297,8 +507,8 @@ public class LinearTeleop extends LinearOpMode {
                 robot.extension.setPower(.5);
             }
             ePosition = robot.extension.getCurrentPosition();
-            //telemetry.addData("Extension Encoder Position Y", ePosition);
-            //telemetry.update();
+            telemetry.addData("\n\rExtension Cur Position:", ePosition);
+            telemetry.update();
         }else if (gamepad2.right_stick_y > .5){ //Pulls in the Arm
             //moveArm(30);
             //robot.arm.setPower(-.75);
@@ -313,8 +523,8 @@ public class LinearTeleop extends LinearOpMode {
                 robot.extension.setPower(.5);
             }
             ePosition = robot.extension.getCurrentPosition();
-            //telemetry.addData("Extension Encoder Position X", ePosition);
-            //telemetry.update();
+            telemetry.addData("\n\rExtension Cur Position:", ePosition);
+            telemetry.update();
         }
     }
 
@@ -326,15 +536,18 @@ public class LinearTeleop extends LinearOpMode {
 
         if(gamepad2.left_stick_y < -.5){ //Rotate the Arm
             userUsingArm = true;
-            if (ePosition < 3125) { //Never go above this number
-                if (ePosition >= 3000) {
-                    ePosition = 3125;
+            if (ePosition < 6200) { //Never go above this number
+                if (ePosition >= 6075) {
+                    ePosition = 6200;
                 }
                 else {
                     ePosition = ePosition + 125;
                 }
                 robot.arm.setTargetPosition(ePosition);
                 robot.arm.setPower(.5);
+                ePosition = robot.arm.getCurrentPosition();
+                telemetry.addData("\n\rArm Cur Position:", ePosition);
+                telemetry.update();
             }
         }else if (gamepad2.left_stick_y > .5){
             userUsingArm = true;
@@ -347,9 +560,13 @@ public class LinearTeleop extends LinearOpMode {
                 }
                 robot.arm.setTargetPosition(ePosition);
                 robot.arm.setPower(.5);
+                ePosition = robot.arm.getCurrentPosition();
+                telemetry.addData("\n\rArm Cur Position:", ePosition);
+                telemetry.update();
             }
         }
 
+        /*
         //Update the Arm Hang Position based on the arm rotation
         //Figure out which arm step we are on now
         if (userUsingArm) {
@@ -359,15 +576,17 @@ public class LinearTeleop extends LinearOpMode {
                     done = true;
                 } else {
                     armStepNow++;
-                    if (armStepNow > 27) {
+                    if (armStepNow > 13) {
                         done = true;
                     }
                 }
             }
-            if (armStepNow <= 27) {
+            if (armStepNow <= 13) {
                 robot.hand_y.setPosition(robot.HANDHANGPOSITION[armStepNow][1]);
             }
         }
+        */
+
 
     }
 
@@ -410,7 +629,12 @@ public class LinearTeleop extends LinearOpMode {
             if (dPadUpPressed == false) {
                 dPadUpPressed = true;
                 if (curHandYPosition <= .95) {
-                    robot.hand_x.setPosition(curHandYPosition + .05);
+                    robot.hand_y.setPosition(curHandYPosition + .05);
+
+                    curHandYPosition = robot.hand_y.getPosition();
+                    telemetry.addData("Hand Cur Y Position:", curHandYPosition);
+                    telemetry.update();
+
                 }
             } else {
                 //We already saw this button press - do not do it again now
@@ -423,7 +647,11 @@ public class LinearTeleop extends LinearOpMode {
             if (dPadDownPressed == false) {
                 dPadDownPressed = true;
                 if (curHandYPosition >= .05) {
-                    robot.hand_x.setPosition(curHandYPosition - .05);
+                    robot.hand_y.setPosition(curHandYPosition - .05);
+
+                    curHandYPosition = robot.hand_y.getPosition();
+                    telemetry.addData("Hand Cur Y Position:", curHandYPosition);
+                    telemetry.update();
                 }
             } else {
                 //We already saw this button press - do not do it again now
@@ -525,8 +753,8 @@ public class LinearTeleop extends LinearOpMode {
         brickFound1 = false;
         brickFound2 = false;
 
-        double distance1 = robot.distanceSensor1.getDistance(DistanceUnit.CM);
-        double distance2 = robot.distanceSensor2.getDistance(DistanceUnit.CM);
+        //double distance1 = robot.distanceSensor1.getDistance(DistanceUnit.CM);
+        //double distance2 = robot.distanceSensor2.getDistance(DistanceUnit.CM);
 
         //telemetry.addData(",\r\n distance1: ", distance1);
         //telemetry.addData(",\r\n distance2: ", distance2);
@@ -548,10 +776,27 @@ public class LinearTeleop extends LinearOpMode {
 
 
     public void grabRelease(){
-
+        int ePosition;
         if(gamepad2.right_bumper){
+            //When releasing to stack the arm is falling on the blocks - to avoid this
+            ePosition = robot.arm.getCurrentPosition();
             robot.fingers.setPosition(robot.FINGERS_OPEN);
+            if (ePosition > 3000) {
+                sleep(100);
+                robot.arm.setTargetPosition(ePosition - 300);
+                robot.arm.setPower(0.2);
+            }
         }else if(gamepad2.left_bumper){
+            //When grabbing inside the rollers, move fingers forward a little and then grab. Also set stacking position to 0
+            ePosition = robot.arm.getCurrentPosition();
+            double curHandYPosition = robot.hand_y.getPosition();
+
+            if (ePosition < 300){
+                robot.hand_y.setPosition(curHandYPosition - 0.025);
+                sleep(300);
+                curStackPosition = 0;
+
+            }
             robot.fingers.setPosition(robot.FINGERS_GRAB);
         }
     }
@@ -565,53 +810,6 @@ public class LinearTeleop extends LinearOpMode {
             robot.leftGripper.setPosition(robot.LEFT_FOUNDATION_GRIPPER_RELEASE);
             robot.rightGripper.setPosition(robot.RIGHT_FOUNDATION_GRIPPER_RELEASE);
         }
-    }
-
-    public void armProcess(){
-        if(gamepad2.a){
-            if (robot.armCurStep > 0){
-                robot.armCurStep--;
-            }
-        }else if (gamepad2.b){
-            if (robot.armCurStep < 27){
-                robot.armCurStep++;
-            }
-        }
-        if (robot.armCurStep != robot.armPrevStep){
-            if (robot.HANDHANGPOSITION[robot.armCurStep][1] != robot.HANDHANGPOSITION[robot.armPrevStep][1]){
-                robot.hand_y.setPosition(robot.HANDHANGPOSITION[robot.armCurStep][1]);
-            }
-            if (robot.HANDHANGPOSITION[robot.armCurStep][4] != robot.HANDHANGPOSITION[robot.armPrevStep][4]){
-                robot.hand_x.setPosition(robot.HANDHANGPOSITION[robot.armCurStep][4]);
-            }
-
-            //Give enough time for the hand position to change before changing the arm
-            //This is needed so that the fingers do not crash into the compliant wheels while coming down quickly
-            if (robot.HANDHANGPOSITION[robot.armCurStep][1] != robot.HANDHANGPOSITION[robot.armPrevStep][1]){
-                if (robot.HANDHANGPOSITION[robot.armCurStep][5] !=0) {
-                    sleep((long) robot.HANDHANGPOSITION[robot.armCurStep][5]);
-                }
-            }
-
-            if (robot.HANDHANGPOSITION[robot.armCurStep][2] != robot.HANDHANGPOSITION[robot.armPrevStep][2]){
-                robot.arm.setTargetPosition((int)robot.HANDHANGPOSITION[robot.armCurStep][2]);
-                robot.arm.setPower(.5);
-            }
-            if (robot.HANDHANGPOSITION[robot.armCurStep][3] != robot.HANDHANGPOSITION[robot.armPrevStep][3]) {
-                robot.extension.setTargetPosition((int)robot.HANDHANGPOSITION[robot.armCurStep][3]);
-                robot.extension.setPower(.5);
-            }
-
-            //Give enough time for the arm position to extend or withdraw
-            //This is needed so that the arm does not crash into the front surgical band while coming down quickly
-            if (robot.HANDHANGPOSITION[robot.armCurStep][3] != robot.HANDHANGPOSITION[robot.armPrevStep][3]){
-                if (robot.HANDHANGPOSITION[robot.armCurStep][6] !=0) {
-                    sleep((long) robot.HANDHANGPOSITION[robot.armCurStep][6]);
-                }
-            }
-            robot.armPrevStep = robot.armCurStep;
-        }
-
     }
 
     public void OLDarmProcess(){

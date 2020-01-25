@@ -53,10 +53,10 @@ public class Chaboya2019Base {
 
     //CONSTANTS
     public double HANDX_MINUS45DEGREES = .0;//This is wrong - fix it
-    public double HANDX_0DEGREES = 0.13;
-    public double HANDX_45DEGREES = .30;
-    public double HANDX_90DEGREES = .46;
-    public double HANDX_135DEGREES = .66;
+    public double HANDX_0DEGREES = 0.07; //Was 1.3
+    public double HANDX_45DEGREES = .24;
+    public double HANDX_90DEGREES = .40;
+    public double HANDX_135DEGREES = .60;
 
     public double FINGERS_GRAB = .13;
     public double FINGERS_OPEN = .21;
@@ -65,10 +65,10 @@ public class Chaboya2019Base {
     public double LEFT_FOUNDATION_GRIPPER_RELEASE = .6;
     public double RIGHT_FOUNDATION_GRIPPER_GRAB = .0;
     public double RIGHT_FOUNDATION_GRIPPER_RELEASE = .4;
-    public double FRONT_LEFT_FOUNDATION_GRIPPER_GRAB = .0;
-    public double FRONT_LEFT_FOUNDATION_GRIPPER_RELEASE = .9;
+    public double FRONT_LEFT_FOUNDATION_GRIPPER_GRAB = 1;
+    public double FRONT_LEFT_FOUNDATION_GRIPPER_RELEASE = .6;
     public double FRONT_RIGHT_FOUNDATION_GRIPPER_GRAB = .5;
-    public double FRONT_RIGHT_FOUNDATION_GRIPPER_RELEASE = 1;
+    public double FRONT_RIGHT_FOUNDATION_GRIPPER_RELEASE = .0;//1
 
     //The array tells us how to move the arm and hand so that the hand is always in a hanging position
     //This hanging position lets us pickup and carry something in a stable fashion with the hand

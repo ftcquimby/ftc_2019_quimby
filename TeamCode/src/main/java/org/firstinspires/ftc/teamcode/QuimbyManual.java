@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name = "QuimbyManual")
+@TeleOp(name = "QuimbyTestManual")
 public class QuimbyManual extends LinearOpMode {
     private QuimbyBot robot;
 
